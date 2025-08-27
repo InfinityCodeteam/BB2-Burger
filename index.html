@@ -1,43 +1,4 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
@@ -46,6 +7,7 @@
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 </head>
 <body>
   <nav class="navbar">
@@ -74,22 +36,68 @@
   </section>
 
   <section class="container">
-    <h2 class="tit">تقييمات العملاء</h2>
-   <div class="card review-list">
-  <p>السماش عندهم خطير حرفياً 🤍❤</p>
-  <p>الخدمه ممتازه والاكل بيجي سخن والباكينج تحفه💕💫</p>
-  <p>اقوي تيم وناس متفاهمه ومتطورين جداً من نجاح ل نجاح 👌🤝👏🔥</p>
-</div>
-
-<div class="card review-list">
-  <p>تشيكن ملهاش مقارنه ب اي تشيكن تانيه</p>
-  <p>فعلا بتحتويني كده 😍🩶🩶</p>
-</div>
-
-<div class="card review-list">
-  <p>اقوي برجر ع الفحم في مصر💥💥🍔</p>
-</div>
-
+    <h2 class="tit">تقييمات بعض العملاء</h2>
+    <div class="swiper reviews-slider">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+          <div class="review-card">
+            <img src="https://i.postimg.cc/Pf6Vfw3g/IMG-20250827-WA0023.jpg" alt="تقييم عميل 1" class="review-img">
+            <!-- <p class="review-caption">من عميل على واتساب</p> -->
+          </div>
+        </div>
+        <div class="swiper-slide">
+          <div class="review-card">
+            <img src="https://i.postimg.cc/J4G6szSG/IMG-20250827-WA0024.jpg" alt="تقييم عميل 2" class="review-img">
+            <!-- <p class="review-caption">من تعليق على إنستجرام</p> -->
+          </div>
+        </div>
+        <div class="swiper-slide">
+          <div class="review-card">
+            <img src="https://i.postimg.cc/LsMNQB51/IMG-20250827-WA0025.jpg" alt="تقييم عميل 3" class="review-img">
+            <!-- <p class="review-caption">من عميل على فيسبوك</p> -->
+          </div>
+        </div>
+        <div class="swiper-slide">
+          <div class="review-card">
+            <img src="https://i.postimg.cc/vHkPfddX/IMG-20250827-WA0026.jpg" alt="تقييم عميل 4" class="review-img">
+            <!-- <p class="review-caption">من عميل على واتساب</p> -->
+          </div>
+        </div>
+        <div class="swiper-slide">
+          <div class="review-card">
+            <img src="https://i.postimg.cc/G2LzdLk3/IMG-20250827-WA0027.jpg" alt="تقييم عميل 5" class="review-img">
+            <!-- <p class="review-caption">من تعليق على إنستجرام</p> -->
+          </div>
+        </div>
+        <div class="swiper-slide">
+          <div class="review-card">
+            <img src="https://i.postimg.cc/76K9LFV3/IMG-20250827-WA0028.jpg" alt="تقييم عميل 6" class="review-img">
+            <!-- <p class="review-caption">من عميل على فيسبوك</p> -->
+          </div>
+        </div>
+        <div class="swiper-slide">
+          <div class="review-card">
+            <img src="https://i.postimg.cc/D0Dcr1Rm/IMG-20250827-WA0029.jpg" alt="تقييم عميل 5" class="review-img">
+            <!-- <p class="review-caption">من تعليق على إنستجرام</p> -->
+          </div>
+        </div>
+        <div class="swiper-slide">
+          <div class="review-card">
+            <img src="https://i.postimg.cc/QCVbKf4R/IMG-20250827-WA0030.jpg" alt="تقييم عميل 5" class="review-img">
+            <!-- <p class="review-caption">من تعليق على إنستجرام</p> -->
+          </div>
+        </div>
+        <div class="swiper-slide">
+          <div class="review-card">
+            <img src="https://i.postimg.cc/9XN1HjzV/IMG-20250827-WA0031.jpg" alt="تقييم عميل 5" class="review-img">
+            <!-- <p class="review-caption">من تعليق على إنستجرام</p> -->
+          </div>
+        </div>
+      </div>
+      <div class="swiper-button-next"></div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-pagination"></div>
+    </div>
   </section>
 
   <footer class="footer">
@@ -129,6 +137,58 @@
 
   <div id="toast" style="display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #333; color: #fff; padding: 10px 20px; border-radius: 5px; z-index: 1000;"></div>
 
+  <script type="text/javascript">
+    var gk_isXlsx = false;
+    var gk_xlsxFileLookup = {};
+    var gk_fileData = {};
+    function filledCell(cell) {
+      return cell !== '' && cell != null;
+    }
+    function loadFileData(filename) {
+      if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+        try {
+          var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+          var firstSheetName = workbook.SheetNames[0];
+          var worksheet = workbook.Sheets[firstSheetName];
+          var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+          var filteredData = jsonData.filter(row => row.some(filledCell));
+          var headerRowIndex = filteredData.findIndex((row, index) =>
+            row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+          );
+          if (headerRowIndex === -1 || headerRowIndex > 25) {
+            headerRowIndex = 0;
+          }
+          var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+          csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+          return csv;
+        } catch (e) {
+          console.error(e);
+          return "";
+        }
+      }
+      return gk_fileData[filename] || "";
+    }
+  </script>
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
   <script src="app.js"></script>
+  <script>
+    const swiper = new Swiper('.reviews-slider', {
+      slidesPerView: 2, // 2 صور جنب بعض على الموبايل والشاشات الصغيرة
+      spaceBetween: 10,
+      loop: false, // نزلنا الـ loop عشان الصور تظهر كلها (6 صور في 3 صفوف)
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      breakpoints: {
+        560: { slidesPerView: 2, spaceBetween: 15 }, // 2 صور على الشاشات المتوسطة
+        900: { slidesPerView: 3, spaceBetween: 20 }, // 3 صور على الشاشات الكبيرة
+      },
+    });
+  </script>
 </body>
 </html>
