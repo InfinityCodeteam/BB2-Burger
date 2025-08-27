@@ -1,0 +1,123 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تفاصيل المنتج - BB2 Burger</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container flex">
+      <img id="logo-img" src="" alt="BB2 Burger" width="100">
+      <ul class="flex">
+        <li><a href="index.html">الرئيسية</a></li>
+        <li><a href="menu.html">المنيو</a></li>
+        <li><a href="favorites.html">المفضلة</a></li>
+        <li><a href="cart.html">السلة</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <section class="container">
+    <div id="product-details" class="card product-card">
+      <p>جاري تحميل تفاصيل المنتج...</p>
+    </div>
+    <div class="card">
+      <button id="fav-btn" class="fav-btn">❤️</button>
+      <label>الحجم: 
+        <select id="size">
+          <option value="single">سينجل</option>
+          <option value="double">دابل</option>
+        </select>
+      </label>
+      <label><input type="checkbox" id="combo"> أضف كومبو (+30 ج)</label>
+      <h3>الإضافات:</h3>
+      <div id="addons" class="grid grid-1"></div>
+      <label>الكمية: <input type="number" id="qty" value="1" min="1"></label>
+      <h3 id="total-price">السعر الإجمالي: 0 ج</h3>
+      <button id="add-btn" class="btn btn-brand">أضف للسلة</button>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-column">
+        <h3>التنقل</h3>
+        <ul>
+          <li><a href="index.html">الرئيسية</a></li>
+          <li><a href="menu.html">المنيو</a></li>
+          <li><a href="favorites.html">المفضلة</a></li>
+          <li><a href="cart.html">السلة</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h3>تواصلوا معنا</h3>
+        <ul>
+          <li><a href="https://www.facebook.com/share/1EhgB6LvHR/"><i class="fab fa-facebook"></i> فيسبوك</a></li>
+          <li><a href="https://www.instagram.com/bb2burger?igsh=MWhuenhwcWJ4YjFqMQ=="><i class="fab fa-instagram"></i> إنستجرام</a></li>
+          <li><a href="https://wa.me/201006473229"><i class="fab fa-whatsapp"></i> واتساب</a></li>
+          <li><a href="https://system.smart-mate.co/profile/5526289899"><i class="fas fa-globe"></i> سايت BB2</a></li>
+        </ul>
+      </div>
+      <div class="footer-column">
+        <h3>عن المطعم</h3>
+        <p id="footer-address"></p>
+        <p id="footer-hours"></p>
+        <p>© 2025 BB2 Burger</p>
+      </div>
+    </div>
+  </footer>
+
+  <div id="sticky-cart" class="sticky-cart" style="display: none;">
+    <span id="cart-count">0 عناصر</span>
+    <span id="cart-total">0 ج</span>
+    <a href="cart.html" class="btn btn-brand">الدفع</a>
+  </div>
+
+  <div id="toast" style="display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #333; color: #fff; padding: 10px 20px; border-radius: 5px; z-index: 1000;"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
