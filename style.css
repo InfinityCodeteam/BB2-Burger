@@ -106,17 +106,17 @@ body {
 #addons label, #combo-label {
   display: flex;
   align-items: center;
-  gap: 10px; /* زيادة المسافة بين الـ checkbox والنص */
+  gap: 10px;
   margin-bottom: 10px;
   cursor: pointer;
-  flex-wrap: nowrap; /* ضمان إن الـ checkbox والنص في نفس السطر */
+  flex-wrap: nowrap;
 }
 input[type="checkbox"] {
   width: 18px;
   height: 18px;
   accent-color: var(--brand);
   cursor: pointer;
-  margin: 0; /* إزالة أي margin افتراضي */
+  margin: 0;
 }
 input, textarea, select {
   background: #333;
@@ -138,16 +138,56 @@ textarea {
   resize: vertical;
   min-height: 80px;
 }
+.reviews-slider {
+  padding: 20px 0;
+}
+.review-card {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.review-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+}
+.review-img {
+  max-width: 100%;
+  max-height: 300px; /* تحديد أقصى ارتفاع للصور */
+  width: auto;
+  height: auto;
+  object-fit: contain; /* ضمان ظهور الصورة كاملة */
+  border-radius: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #444; /* إطار خفيف لتحسين الرؤية في الدارك موود */
+}
+.review-caption {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.swiper-button-next, .swiper-button-prev {
+  color: var(--brand);
+}
+.swiper-pagination-bullet {
+  background: var(--muted);
+}
+.swiper-pagination-bullet-active {
+  background: var(--brand);
+}
 @media (max-width: 900px) {
   .grid-3 { grid-template-columns: 1fr 1fr; }
+  .review-img { max-height: 250px; } /* تصغير الصور على الشاشات المتوسطة */
 }
 @media (max-width: 560px) {
   .grid-3 { grid-template-columns: 1fr; }
   #addons.grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   #logo-img { width: 60px; }
   #addons label, #combo-label {
-    gap: 8px; /* تقليل المسافة على الموبايل */
+    gap: 8px;
   }
+  .review-img { max-height: 200px; } /* تصغير الصور على الموبايل */
 }
 .hero {
   position: relative;
@@ -366,31 +406,3 @@ textarea {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
-
-.review-list {
-  background: #2a2a2a;
-  border-radius: 12px;
-  padding: 15px;
-  margin: 15px 0;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  font-family: "Cairo", sans-serif;
-}
-
-.review-list p {
-  position: relative;
-  padding-right: 20px;
-  margin: 8px 0;
-  font-size: 16px;
-  line-height: 1.6;
-}
-
-.review-list p::before {
-  content: "•";
-  position: absolute;
-  right: 0;
-  color: #ffcc00;   /* لون أصفر براند */
-  font-size: 20px;
-  line-height: 1;
-}
-
