@@ -421,7 +421,7 @@ if (document.querySelector('#menu-grid')) {
           lines.push(`   السعر: ${egp(lineTotal(it))}`);
         });
         lines.push(`—`);
-        lines.push(`*المجموع بدون توصيل *: ${egp(cartTotal(store.cart))}`);
+        lines.push(`*المجموع بدون توصيل*: ${egp(cartTotal(store.cart))}`);
         lines.push(`—`);
         lines.push(`الاسم: ${name.value}`);
         lines.push(`موبايل: ${mobile.value}`);
