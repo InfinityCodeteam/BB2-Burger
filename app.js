@@ -55,17 +55,8 @@ function lineTotal(it) {
   return (base + addonsTotal + combo) * it.qty;
 }
 
-function cartTotal(cart, applyDiscount = false) {
-  const total = cart.reduce((s, it) => s + lineTotal(it), 0);
-  if (applyDiscount) {
-    const discount = total * 0.05; // 5% discount
-    return {
-      original: total,
-      discount: discount,
-      final: total - discount
-    };
-  }
-  return total;
+function cartTotal(cart) {
+  return cart.reduce((s, it) => s + lineTotal(it), 0);
 }
 
 const egp = n => `${n.toLocaleString('ar-EG')} ج`;
@@ -84,9 +75,9 @@ function updateStickyCart() {
   const stickyCart = document.querySelector('#sticky-cart');
   if (stickyCart) {
     const count = store.cart.length;
-    const totalInfo = cartTotal(store.cart, true);
+    const total = cartTotal(store.cart);
     document.querySelector('#cart-count').textContent = `${count} عناصر`;
-    document.querySelector('#cart-total').textContent = egp(totalInfo.final);
+    document.querySelector('#cart-total').textContent = egp(total);
     stickyCart.style.display = count > 0 ? 'flex' : 'none';
   }
 }
@@ -397,19 +388,14 @@ if (document.querySelector('#menu-grid')) {
           cartList.appendChild(div);
         });
 
-        const totalInfo = cartTotal(store.cart, true);
-        grandTotalEl.innerHTML = `
-          <p>الإجمالي: ${egp(totalInfo.original)}</p>
-          <p>الخصم (5%): ${egp(totalInfo.discount)}</p>
-          <p>المجموع النهائي بدون توصيل: ${egp(totalInfo.final)}</p>
-        `;
+        const grand = cartTotal(store.cart);
+        grandTotalEl.textContent = egp(grand);
       }
 
       cartList.addEventListener('click', e => {
         if (e.target.classList.contains('remove-btn')) {
           store.removeFromCart(e.target.dataset.i);
           updateCart();
-          updateStickyCart();
         }
       });
 
@@ -420,13 +406,11 @@ if (document.querySelector('#menu-grid')) {
           if (qty >= 1) {
             store.updateQty(i, qty);
             updateCart();
-            updateStickyCart();
           }
         }
       });
 
       document.querySelector('#whatsapp-order').addEventListener('click', () => {
-        const totalInfo = cartTotal(store.cart, true);
         const lines = [];
         lines.push(`*طلب جديد - ${settings.brand}*`);
         store.cart.forEach((it, idx) => {
@@ -437,9 +421,7 @@ if (document.querySelector('#menu-grid')) {
           lines.push(`   السعر: ${egp(lineTotal(it))}`);
         });
         lines.push(`—`);
-        lines.push(`*الإجمالي:*: ${egp(totalInfo.original)}`);
-        lines.push(`*الخصم (5%)*: ${egp(totalInfo.discount)}`);
-        lines.push(`*المجموع النهائي بدون توصيل*: ${egp(totalInfo.final)}`);
+        lines.push(`*المجموع بدون توصيل*: ${egp(cartTotal(store.cart))}`);
         lines.push(`—`);
         lines.push(`الاسم: ${name.value}`);
         lines.push(`موبايل: ${mobile.value}`);
@@ -450,13 +432,11 @@ if (document.querySelector('#menu-grid')) {
         const url = `https://wa.me/${phone}?text=${msg}`;
         window.location.href = url;
         store.clearCart();
-        updateStickyCart();
       });
 
       updateCart();
       await loadLogo();
       await loadFooterData();
-      updateStickyCart();
     } catch (e) {
       console.error('خطأ في تحميل صفحة السلة:', e);
     }
