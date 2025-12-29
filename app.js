@@ -82,10 +82,23 @@ function updateStickyCart() {
   }
 }
 
-function createProductCard(item) {
+function createProductCard(item, category = '') {
   const card = document.createElement('div');
   card.classList.add('card', 'product');
   card.dataset.id = item.id;
+
+  // تحقق إذا كانت الفئة هي "المقبلات" (e) لعرض سعر واحد فقط
+  const isAppetizer = category === 'e' || item.category === 'e';
+  
+  let priceHTML = '';
+  if (isAppetizer) {
+    // للمقبلات: عرض سعر واحد فقط
+    priceHTML = `<div class="price">${egp(item.price.single)}</div>`;
+  } else {
+    // لباقي المنتجات: عرض سنجل ودبل
+    const doublePrice = item.price.double || item.price.single;
+    priceHTML = `<div class="price">سينجل ${egp(item.price.single)} — دابل ${egp(doublePrice)}</div>`;
+  }
 
   card.innerHTML = `
     <div class="flex">
@@ -93,7 +106,7 @@ function createProductCard(item) {
       <div class="ml">
         <h3>${item.name}</h3>
         <p class="muted">${item.desc}</p>
-        <div class="price">سينجل ${egp(item.price.single)} — دابل ${egp(item.price.double || item.price.single)}</div>
+        ${priceHTML}
       </div>
     </div>
     <div class="flex actions">
@@ -175,6 +188,7 @@ async function loadFavorites() {
         noFavorites.style.display = 'none';
         grid.style.display = 'grid';
         favoriteItems.forEach(item => {
+          // الحصول على فئة المنتج لعرض السعر المناسب
           const card = createProductCard(item);
           card.querySelector('.add-cart-btn').outerHTML = `<button class="btn btn-danger remove-fav-btn" data-id="${item.id}">إزالة</button>`;
           grid.appendChild(card);
@@ -201,7 +215,7 @@ async function loadMenu(category = 'all') {
         });
       }
       const filteredItems = category === 'all' ? items : items.filter(item => item.category === category);
-      filteredItems.forEach(item => grid.appendChild(createProductCard(item)));
+      filteredItems.forEach(item => grid.appendChild(createProductCard(item, category)));
     }
   } catch (e) {
     console.error('خطأ في تحميل المنيو:', e);
@@ -215,7 +229,11 @@ async function loadFeatured() {
     if (grid) {
       grid.innerHTML = '';
       const featuredItems = items.filter(item => item.featured).slice(0, 6);
-      featuredItems.forEach(item => grid.appendChild(createProductCard(item)));
+      featuredItems.forEach(item => {
+        // تمرير فئة المنتج لدالة createProductCard
+        const card = createProductCard(item);
+        grid.appendChild(card);
+      });
     }
   } catch (e) {
     console.error('خطأ في تحميل المنتجات المميزة:', e);
@@ -265,23 +283,31 @@ if (document.querySelector('#menu-grid')) {
     try {
       const params = new URLSearchParams(window.location.search);
       const id = parseInt(params.get('id'));
-      console.log('Product ID:', id); // Debugging
+      console.log('Product ID:', id);
       if (!id) {
         document.querySelector('#product-details').innerHTML = '<p>معرف المنتج غير موجود</p>';
         return;
       }
 
       const items = await api.load('items.json');
-      console.log('Items loaded:', items); // Debugging
+      console.log('Items loaded:', items);
       const addons = await api.load('addons.json');
-      console.log('Addons loaded:', addons); // Debugging
+      console.log('Addons loaded:', addons);
       const item = items.find(i => i.id === id);
-      console.log('Selected item:', item); // Debugging
+      console.log('Selected item:', item);
+      
+      // تحقق إذا كان المنتج من فئة "المقبلات" (e)
+      const isAppetizer = item.category === 'e';
+      
       const combos = [{ id: 'combo', name: 'كومبو', extra: 30 }];
       const details = document.querySelector('#product-details');
       const sizeSelect = document.querySelector('#size');
+      const sizeLabel = sizeSelect ? sizeSelect.parentElement : null;
       const comboCheck = document.querySelector('#combo');
-      const qty = document.querySelector('#qty');
+      const qtyDisplay = document.querySelector('#qty-display'); // العرض الجديد
+      const qtyInput = document.querySelector('#qty'); // input مخفي
+      const qtyPlus = document.querySelector('#qty-plus'); // زر الزيادة
+      const qtyMinus = document.querySelector('#qty-minus'); // زر النقصان
       const addonsList = document.querySelector('#addons');
       const totalPrice = document.querySelector('#total-price');
       const addBtn = document.querySelector('#add-btn');
@@ -302,28 +328,74 @@ if (document.querySelector('#menu-grid')) {
         <label><input type="checkbox" data-id="${a.id}" data-price="${a.price}"> ${a.name} (${egp(a.price)})</label>
       `).join('');
 
-      // Disable double option if not available
-      if (!item.price.double) {
-        sizeSelect.querySelector('option[value="double"]').disabled = true;
+      // إذا كان المنتج من فئة "المقبلات"، أخفي خيار الحجم
+      if (isAppetizer) {
+        // إخفاء خيار الحجم للمقبلات
+        if (sizeLabel) {
+          sizeLabel.style.display = 'none';
+        }
+        // استخدام السعر الوحيد
+        item.price.singleOnly = true;
+      } else {
+        // للمنتجات الأخرى: تعطيل خيار الدبل إذا غير متوفر
+        if (sizeSelect && !item.price.double) {
+          sizeSelect.querySelector('option[value="double"]').disabled = true;
+        }
+      }
+
+      // دالة تحديث الكمية
+      function updateQty(value) {
+        let qty = parseInt(value);
+        if (qty < 1) qty = 1;
+        if (qty > 99) qty = 99;
+        
+        qtyInput.value = qty;
+        qtyDisplay.textContent = qty;
+        updatePrice();
+      }
+
+      // أحداث الأزرار
+      if (qtyPlus) {
+        qtyPlus.addEventListener('click', () => {
+          updateQty(parseInt(qtyInput.value) + 1);
+        });
+      }
+
+      if (qtyMinus) {
+        qtyMinus.addEventListener('click', () => {
+          updateQty(parseInt(qtyInput.value) - 1);
+        });
+      }
+
+      // السماح بتغيير الكمية بالنقر المزدوج على العرض
+      if (qtyDisplay) {
+        qtyDisplay.addEventListener('dblclick', () => {
+          const newQty = prompt('أدخل الكمية:', qtyInput.value);
+          if (newQty && !isNaN(newQty) && parseInt(newQty) > 0) {
+            updateQty(parseInt(newQty));
+          }
+        });
       }
 
       function updatePrice() {
-        const size = sizeSelect.value;
+        const size = isAppetizer ? 'single' : (sizeSelect ? sizeSelect.value : 'single');
         const basePrice = item.price[size] || item.price.single;
         const comboExtra = comboCheck.checked ? combos[0].extra : 0;
         const addonsTotal = Array.from(addonsList.querySelectorAll('input:checked')).reduce((s, inp) => s + parseInt(inp.dataset.price), 0);
-        const total = (basePrice + comboExtra + addonsTotal) * parseInt(qty.value || 1);
+        const total = (basePrice + comboExtra + addonsTotal) * parseInt(qtyInput.value || 1);
         totalPrice.textContent = `السعر الإجمالي: ${egp(total)}`;
       }
 
-      sizeSelect.addEventListener('change', updatePrice);
+      if (!isAppetizer && sizeSelect) {
+        sizeSelect.addEventListener('change', updatePrice);
+      }
       comboCheck.addEventListener('change', updatePrice);
-      qty.addEventListener('input', updatePrice);
       addonsList.addEventListener('change', updatePrice);
       updatePrice();
 
       addBtn.addEventListener('click', () => {
-        const size = sizeSelect.value;
+        const size = isAppetizer ? 'single' : (sizeSelect ? sizeSelect.value : 'single');
+        const sizeLabel = isAppetizer ? 'واحد' : (size === 'single' ? 'سينجل' : 'دابل');
         const selectedAddons = Array.from(addonsList.querySelectorAll('input:checked')).map(inp => ({
           id: inp.dataset.id,
           name: addons.find(a => a.id === inp.dataset.id).name,
@@ -333,11 +405,12 @@ if (document.querySelector('#menu-grid')) {
         const newItem = {
           id: item.id,
           name: item.name,
-          size: size === 'single' ? 'سينجل' : 'دابل',
+          size: sizeLabel,
           unitPrice: item.price[size] || item.price.single,
-          qty: parseInt(qty.value || 1),
+          qty: parseInt(qtyInput.value || 1),
           addons: selectedAddons,
-          combo
+          combo,
+          category: item.category
         };
         store.addToCart(newItem);
         showToast('تمت الإضافة إلى السلة ✓');
@@ -377,8 +450,12 @@ if (document.querySelector('#menu-grid')) {
         store.cart.forEach((it, i) => {
           const div = document.createElement('div');
           div.classList.add('card');
+          
+          // إذا كان المنتج من فئة المقبلات، لا نعرض الحجم
+          const sizeDisplay = it.category === 'e' ? '' : ` - ${it.size}`;
+          
           div.innerHTML = `
-            <h3>${it.name} - ${it.size}</h3>
+            <h3>${it.name}${sizeDisplay}</h3>
             <p>إضافات: ${(it.addons || []).map(a => a.name).join(', ') || 'بدون'}</p>
             <p>كومبو: ${it.combo ? 'نعم' : 'لا'}</p>
             <label>الكمية: <input type="number" class="qty-input" data-i="${i}" value="${it.qty}" min="1"></label>
@@ -416,7 +493,8 @@ if (document.querySelector('#menu-grid')) {
         store.cart.forEach((it, idx) => {
           const addons = (it.addons || []).map(a => a.name).join('، ') || 'بدون إضافات';
           const combo = it.combo ? ` + كومبو` : '';
-          lines.push(`${idx + 1}) ${it.name} - ${it.size}${combo} عدد (${it.qty})`);
+          const sizeDisplay = it.category === 'e' ? '' : ` - ${it.size}`;
+          lines.push(`${idx + 1}) ${it.name}${sizeDisplay}${combo} عدد (${it.qty})`);
           lines.push(`   إضافات: ${addons}`);
           lines.push(`   السعر: ${egp(lineTotal(it))}`);
         });
