@@ -291,5 +291,16 @@
     },
     "image": "https://i.postimg.cc/d1z0hhkm/Whats-App-Image-2025-08-28-at-17-12-44-fa7a1fbb.jpg",
     "featured": false
+  },
+  {
+    "id": 26,
+    "category": "e",
+    "name": "بطاطس سماش شيدر",
+    "desc": "",
+    "price": {
+      "single": 90
+    },
+    "image": "https://i.postimg.cc/Pxfkhth1/Whats-App-Image-2025-12-29-at-7-50-05-PM.jpg",
+    "featured": false
   }
 ]
