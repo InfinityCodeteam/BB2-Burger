@@ -1,12 +1,12 @@
 [
-  { "id": "mozz-sticks", "name": "موتزريلا ستيكس", "price": 20 },
-  { "id": "mushroom", "name": "مشروم", "price": 15 },
-  { "id": "jalapeno", "name": "هاليبينو", "price": 15 },
-  { "id": "caramel-on", "name": "بصل مكرمل", "price": 15 },
-  { "id": "turkey", "name": "تركي", "price": 25 },
-  { "id": "pepperoni", "name": "ببروني", "price": 25 },
-  { "id": "bacon", "name": "بيكون", "price": 25 },
-  { "id": "cheese", "name": "جبنة", "price": 20 },
-  { "id": "tasty", "name": "تاستي", "price": 15 },
-  { "id": "texas", "name": "تكساس", "price": 15 }
+  { "id": "mozz-sticks", "name": "موتزريلا ستيكس", "price": 25 },
+  { "id": "mushroom", "name": "مشروم", "price": 20 },
+  { "id": "jalapeno", "name": "هاليبينو", "price": 20 },
+  { "id": "caramel-on", "name": "بصل مكرمل", "price": 20 },
+  { "id": "turkey", "name": "تركي", "price": 30 },
+  { "id": "pepperoni", "name": "ببروني", "price": 30 },
+  { "id": "bacon", "name": "بيكون", "price": 30 },
+  { "id": "cheese", "name": "جبنة", "price": 25 },
+  { "id": "tasty", "name": "تاستي", "price": 20 },
+  { "id": "texas", "name": "تكساس", "price": 20 }
 ]
