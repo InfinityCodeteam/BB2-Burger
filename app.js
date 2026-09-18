@@ -541,39 +541,49 @@ if (document.querySelector('#menu-grid')) {
       });
 
       document.querySelector('#whatsapp-order').addEventListener('click', () => {
-        if(store.cart.length === 0) { showToast('السلة فارغة!'); return; }
-        if(!name.value.trim() || !mobile.value.trim() || !address.value.trim()) { showToast('برجاء إكمال البيانات الأساسية.'); return; }
-
-        const lines = [];
-        lines.push(`🍔 *طلب جديد من ${settings.brand || 'BB2 Burger'}* 🍔`);
-        lines.push(`──────────────`);
-        
-        store.cart.forEach((it, idx) => {
-          const addons = (it.addons && it.addons.length > 0) ? it.addons.map(a => a.name).join('، ') : 'بدون';
-          const combo = it.combo ? `نعم (+${it.combo.extra}ج)` : 'لا';
-          const sizeDisplay = it.size ? ` (${it.size})` : '';
-          
-          lines.push(`🍔 *${idx + 1}. ${it.name}${sizeDisplay}*`);
-          lines.push(`🔢 الكمية: ${it.qty}`);
-          if(it.addons && it.addons.length > 0) lines.push(`🧀 الإضافات: ${addons}`);
-          if(it.combo) lines.push(`🍟 كومبو: ${combo}`);
-          lines.push(`💵 السعر: ${egp(lineTotal(it))}`);
-          lines.push(`──────────────`);
-        });
-        
-        lines.push(`💰 *الإجمالي المطلوب:* ${egp(cartTotal(store.cart))}`);
-        lines.push(`──────────────`);
-        lines.push(`👤 *بيانات العميل:*`);
-        lines.push(`الاسم: ${name.value.trim()}`);
-        lines.push(`الموبايل: ${mobile.value.trim()}`);
-        lines.push(`العنوان: ${address.value.trim()}`);
-        if (notes.value.trim()) lines.push(`📝 ملاحظات: ${notes.value.trim()}`);
-        lines.push(`💳 الدفع: ${payment.value}`);
-        
-        const msg = encodeURIComponent(lines.join('\n'));
-        window.location.href = `https://wa.me/${phone}?text=${msg}`;
-        store.clearCart();
-      });
+  if(store.cart.length === 0) { showToast('السلة فارغة!'); return; }
+  if(!name.value.trim() || !mobile.value.trim() || !address.value.trim()) { showToast('برجاء إكمال البيانات الأساسية.'); return; }
+  
+  const lines = [];
+  lines.push(`*طلب جديد | ${settings.brand || 'BB2 Burger - قليوب'}*`);
+  lines.push(`======================`);
+  
+  store.cart.forEach((it, idx) => {
+    const sizeDisplay = it.size ? ` (${it.size})` : '';
+    
+    // اسم المنتج بخط عريض
+    lines.push(`*[${idx + 1}] ${it.name}${sizeDisplay}*`);
+    lines.push(`- الكمية: ${it.qty}`);
+    
+    if(it.addons && it.addons.length > 0) {
+      const addons = it.addons.map(a => a.name).join('، ');
+      lines.push(`- الإضافات: ${addons}`);
+    }
+    
+    if(it.combo) {
+      lines.push(`- كومبو: نعم (+${it.combo.extra}ج)`);
+    }
+    
+    lines.push(`- السعر: ${egp(lineTotal(it))}`);
+    lines.push(`----------------------`);
+  });
+  
+  lines.push(`*الإجمالي المطلوب بدون توصيل :  ${egp(cartTotal(store.cart))}*`);
+  lines.push(`======================`);
+  lines.push(`*بيانات العميل:*`);
+  lines.push(`- الاسم: ${name.value.trim()}`);
+  lines.push(`- الموبايل: ${mobile.value.trim()}`);
+  lines.push(`- العنوان: ${address.value.trim()}`);
+  lines.push(`- الدفع: ${payment.value}`);
+  
+  if (notes.value.trim()) {
+    lines.push(`- ملاحظات: ${notes.value.trim()}`);
+  }
+  
+  const msg = encodeURIComponent(lines.join('\n'));
+  window.location.href = `https://wa.me/${phone}?text=${msg}`;
+  store.clearCart();
+});
 
       updateCart();
       await loadLogo();
