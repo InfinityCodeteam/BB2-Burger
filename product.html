@@ -2,93 +2,393 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#121212">
   <title>تفاصيل المنتج - BB2 Burger</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+  <style>
+    :root {
+      --bg-dark: #121212;
+      --bg-card: #1e1e1e;
+      --brand: #FFD000;
+      --brand-hover: #ffba00;
+      --text-main: #ffffff;
+      --text-muted: #a0a0a0;
+      --danger: #ef4444;
+      --success: #22c55e;
+      --radius-sm: 12px;
+      --radius-md: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: "Cairo", sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+      padding-bottom: 100px; /* مساحة للشريط السفلي اللاصق */
+    }
+
+    .container {
+      padding: 0 15px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    /* شريط التنقل العلوي (شفاف فوق الصورة) */
+    .top-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+      z-index: 100;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .icon-btn {
+      background: rgba(18, 18, 18, 0.5);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--text-main);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 18px;
+      text-decoration: none;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+    .icon-btn:hover { background: var(--brand); color: #000; border-color: var(--brand); }
+    
+    /* زر المفضلة */
+    .fav-btn.favorited {
+      color: var(--danger);
+      background: rgba(239, 68, 68, 0.2);
+      border-color: var(--danger);
+    }
+    .fav-btn.favorited i { font-weight: 900; } /* أيقونة مصمتة عند الإعجاب */
+
+    /* منطقة تفاصيل المنتج (صورة + نصوص) */
+    #product-details {
+      margin-top: 0; /* لأن الصورة هتبدأ من أول الشاشة */
+      padding-bottom: 20px;
+    }
+
+    /* تنسيق العناصر التي يتم حقنها من الجافاسكريبت */
+    #product-details img {
+      width: 100vw;
+      height: 40vh; /* تأخذ 40% من طول الشاشة */
+      object-fit: cover;
+      margin-left: -15px; /* لإلغاء الـ padding الخاص بالكونتينر */
+      margin-right: -15px;
+      border-radius: 0 0 35px 35px; /* حواف سفلية دائرية */
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      background: #2a2a2a;
+    }
+
+    #product-details h2, #product-details h3 {
+      font-size: 26px;
+      font-weight: 900;
+      margin-top: 20px;
+      color: #fff;
+    }
+
+    #product-details p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.8;
+      margin-top: 8px;
+    }
+
+    /* منطقة الخيارات (الحجم، الكومبو، الإضافات) */
+    .options-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-top: 10px;
+      border: 1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    }
+
+    .option-group {
+      margin-bottom: 25px;
+    }
+    .option-group:last-child { margin-bottom: 0; }
+    
+    .option-title {
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .option-title i { color: var(--brand); }
+
+    /* تنسيق قائمة اختيار الحجم (Select) */
+    .custom-select {
+      position: relative;
+      width: 100%;
+    }
+    .custom-select select {
+      width: 100%;
+      background: #2a2a2a;
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 14px 15px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: "Cairo", sans-serif;
+      appearance: none;
+      outline: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .custom-select select:focus { border-color: var(--brand); }
+    .custom-select::after {
+      content: '\f107'; /* سهم لأسفل */
+      font-family: "Font Awesome 5 Free";
+      font-weight: 900;
+      position: absolute;
+      left: 15px; /* لأن الاتجاه RTL */
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    /* تنسيق الكومبو والإضافات */
+    label.checkbox-label, #addons label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255,255,255,0.02);
+      padding: 14px 15px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.05);
+      margin-bottom: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+    label.checkbox-label:hover, #addons label:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,208,0,0.3);
+    }
+    input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--brand);
+      cursor: pointer;
+    }
+
+    /* التحكم في الكمية */
+    .quantity-control {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255,255,255,0.02);
+      padding: 12px 20px;
+      border-radius: 15px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .qty-buttons {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .qty-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      border: none;
+      font-size: 20px;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: 0.2s;
+    }
+    .qty-btn.minus { background: #333; color: #fff; }
+    .qty-btn.plus { background: var(--brand); color: #111; }
+    .qty-btn:active { transform: scale(0.9); }
+    .qty-display {
+      font-size: 18px;
+      font-weight: 900;
+      min-width: 25px;
+      text-align: center;
+    }
+
+    /* الشريط السفلي الثابت (أضف للسلة) */
+    .product-action-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(30, 30, 30, 0.95);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      padding: 15px 20px;
+      padding-bottom: calc(15px + env(safe-area-inset-bottom));
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      z-index: 1000;
+      box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
+    }
+    
+    .price-wrap { display: flex; flex-direction: column; }
+    .price-label { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+    #total-price { font-size: 22px; font-weight: 900; color: var(--brand); margin: 0; }
+
+    .btn-add {
+      background: var(--brand);
+      color: #111;
+      border: none;
+      padding: 14px 25px;
+      border-radius: 25px;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 5px 15px rgba(255, 208, 0, 0.3);
+      transition: 0.3s;
+    }
+    .btn-add:hover { background: var(--brand-hover); transform: translateY(-2px); }
+    .btn-add:active { transform: scale(0.95); }
+
+    /* الفوتر */
+    .footer {
+      background: var(--bg-card);
+      padding: 30px 20px;
+      text-align: center;
+      margin-top: 40px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .social-links { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
+    .social-links a {
+      width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.05);
+      color: var(--text-main); display: flex; align-items: center; justify-content: center;
+      font-size: 18px; text-decoration: none; transition: 0.3s;
+    }
+    .social-links a:hover { background: var(--brand); color: #000; }
+    .footer-text { color: var(--text-muted); font-size: 11px; }
+
+  </style>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="container flex">
-      <img id="logo-img" src="" alt="BB2 Burger" width="100">
-      <ul class="flex">
-        <li><a href="index.html">الرئيسية</a></li>
-        <li><a href="menu.html">المنيو</a></li>
-        <li><a href="favorites.html">المفضلة</a></li>
-        <li><a href="cart.html">السلة</a></li>
-      </ul>
-    </div>
-  </nav>
 
+  <!-- شريط علوي شفاف للرجوع والمفضلة -->
+  <header class="top-header">
+    <a href="javascript:history.back()" class="icon-btn"><i class="fas fa-arrow-right"></i></a>
+    <!-- تم نقل زر المفضلة هنا ليصبح أكثر احترافية (الجافاسكريبت سيتعرف عليه عبر الـ id) -->
+    <button id="fav-btn" class="icon-btn fav-btn"><i class="far fa-heart"></i></button>
+  </header>
+
+  <!-- تفاصيل المنتج الأساسية -->
   <section class="container">
-    <div id="product-details" class="card product-card">
-      <p>جاري تحميل تفاصيل المنتج...</p>
+    <!-- الجافاسكريبت سيحقن الصورة، العنوان، والوصف هنا -->
+    <div id="product-details">
+      <p style="text-align:center; padding-top: 100px;">جاري تحميل تفاصيل المنتج...</p>
     </div>
-    <div class="card">
-      <button id="fav-btn" class="fav-btn">❤️</button>
-      <label>الحجم: 
-        <select id="size">
-          <option value="single">سينجل</option>
-          <option value="double">دابل</option>
-        </select>
-      </label>
-      <label><input type="checkbox" id="combo"> أضف كومبو (+30 ج)</label>
-      <h3>الإضافات:</h3>
-      <div id="addons" class="grid grid-1"></div>
+
+    <!-- كارت الخيارات والإضافات -->
+    <div class="options-card">
       
-      <!-- التعديل هنا: تحويل input إلى أزرار + و - -->
-      <div class="quantity-control">
-        <label>الكمية:</label>
-        <div class="qty-buttons">
-          <button class="qty-btn minus" id="qty-minus">-</button>
-          <span class="qty-display" id="qty-display">1</span>
-          <button class="qty-btn plus" id="qty-plus">+</button>
-          <input type="hidden" id="qty" value="1">
+      <!-- اختيار الحجم -->
+      <div class="option-group">
+        <div class="option-title"><i class="fas fa-expand-arrows-alt"></i> اختر الحجم</div>
+        <div class="custom-select">
+          <select id="size">
+            <option value="single">سينجل (Single)</option>
+            <option value="double">دابل (Double)</option>
+          </select>
         </div>
       </div>
+
+      <!-- اختيار الكومبو -->
+      <div class="option-group">
+        <label class="checkbox-label">
+          <input type="checkbox" id="combo"> 
+          <span>أضف كومبو (بطاطس + مشروب) <strong style="color:var(--brand);">+30 ج</strong></span>
+        </label>
+      </div>
+
+      <!-- الإضافات -->
+      <div class="option-group">
+        <div class="option-title"><i class="fas fa-plus-circle"></i> إضافات مميزة</div>
+        <!-- الجافاسكريبت سيقوم بوضع الـ Checkboxes الخاصة بالإضافات هنا -->
+        <div id="addons"></div>
+      </div>
       
-      <h3 id="total-price">السعر الإجمالي: 0 ج</h3>
-      <button id="add-btn" class="btn btn-brand">أضف للسلة</button>
+      <!-- التحكم في الكمية -->
+      <div class="option-group">
+        <div class="quantity-control">
+          <div class="option-title" style="margin:0; font-size: 15px;">الكمية</div>
+          <div class="qty-buttons">
+            <button class="qty-btn minus" id="qty-minus">-</button>
+            <span class="qty-display" id="qty-display">1</span>
+            <button class="qty-btn plus" id="qty-plus">+</button>
+            <input type="hidden" id="qty" value="1">
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 
+  <!-- الشريط السفلي الثابت (أضف للسلة) -->
+  <div class="product-action-bar">
+    <div class="price-wrap">
+      <span class="price-label">السعر الإجمالي</span>
+      <h3 id="total-price">0 ج</h3>
+    </div>
+    <button id="add-btn" class="btn-add">
+      <i class="fas fa-shopping-cart"></i> أضف للسلة
+    </button>
+  </div>
+
+  <!-- الفوتر -->
   <footer class="footer">
-    <div class="container footer-grid">
-      <div class="footer-column">
-        <h3>التنقل</h3>
-        <ul>
-          <li><a href="index.html">الرئيسية</a></li>
-          <li><a href="menu.html">المنيو</a></li>
-          <li><a href="favorites.html">المفضلة</a></li>
-          <li><a href="cart.html">السلة</a></li>
-        </ul>
+    <div class="container">
+      <div class="social-links">
+        <a href="https://www.facebook.com/share/1EhgB6LvHR/"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.instagram.com/bb2burger"><i class="fab fa-instagram"></i></a>
+        <a href="https://wa.me/201006473229"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://system.smart-mate.co/profile/5526289899"><i class="fas fa-globe"></i></a>
       </div>
-      <div class="footer-column">
-        <h3>تواصلوا معنا</h3>
-        <ul>
-          <li><a href="https://www.facebook.com/share/1EhgB6LvHR/"><i class="fab fa-facebook"></i> فيسبوك</a></li>
-          <li><a href="https://www.instagram.com/bb2burger?igsh=MWhuenhwcWJ4YjFqMQ=="><i class="fab fa-instagram"></i> إنستجرام</a></li>
-          <li><a href="https://wa.me/201006473229"><i class="fab fa-whatsapp"></i> واتساب</a></li>
-          <li><a href="https://system.smart-mate.co/profile/5526289899"><i class="fas fa-globe"></i> سايت BB2</a></li>
-        </ul>
-      </div>
-      <div class="footer-column">
-        <h3>عن المطعم</h3>
-        <p id="footer-address"></p>
-        <p id="footer-hours"></p>
-        <p>© 2025 BB2 Burger</p>
-      </div>
+      <p class="footer-text" id="footer-address">المنصورة - حي الجامعة</p>
+      <p class="footer-text" id="footer-hours">مفتوح يومياً من 1 ظهراً حتى 3 فجراً</p>
+      <p class="footer-text">© 2025 BB2 Burger. جميع الحقوق محفوظة.</p>
     </div>
   </footer>
 
-  <div id="sticky-cart" class="sticky-cart" style="display: none;">
-    <span id="cart-count">0 عناصر</span>
-    <span id="cart-total">0 ج</span>
-    <a href="cart.html" class="btn btn-brand">الدفع</a>
-  </div>
-
-  <div id="toast" style="display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #333; color: #fff; padding: 10px 20px; border-radius: 5px; z-index: 1000;"></div>
+  <!-- الإشعارات العائمة -->
+  <div id="toast" style="display: none; position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: var(--brand); color: #000; padding: 12px 25px; border-radius: 25px; font-weight: bold; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.3);"></div>
 
   <script src="app.js"></script>
 </body>

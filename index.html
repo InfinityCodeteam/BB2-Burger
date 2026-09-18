@@ -2,148 +2,534 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- إعدادات الشاشة للموبايل والتطبيقات -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#121212">
   <title>BB2 Burger</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
+  <style>
+    /* المتغيرات والألوان */
+    :root {
+      --bg-dark: #121212;
+      --bg-card: #1e1e1e;
+      --brand: #FFD000;
+      --brand-hover: #ffba00;
+      --text-main: #ffffff;
+      --text-muted: #a0a0a0;
+      --danger: #ef4444;
+      --success: #22c55e;
+      --radius-sm: 12px;
+      --radius-md: 20px;
+      --radius-lg: 30px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: "Cairo", sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+      padding-bottom: 90px; /* مساحة للنافبار السفلي */
+    }
+
+    /* العناوين والتفاصيل الأساسية */
+    .container {
+      padding: 0 12px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* النافبار العلوي (مظهر زجاجي) */
+    .top-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(18, 18, 18, 0.85);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      z-index: 100;
+      padding: 12px 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .top-header img {
+      height: 35px;
+      object-fit: contain;
+    }
+
+    .user-actions {
+      display: flex;
+      gap: 15px;
+    }
+
+    .icon-btn {
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-main);
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 16px;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+    .icon-btn:hover { background: var(--brand); color: #000; }
+
+    /* الهيرو سكشن (بانر الواجهة) */
+    .hero {
+      position: relative;
+      margin-top: 70px; /* بعد النافبار */
+      margin-bottom: 30px;
+    }
+    .hero-inner {
+      position: relative;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      height: 220px;
+      display: flex;
+      align-items: flex-end;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .banner-slider {
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      background: url('https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1000&auto=format&fit=crop') center/cover;
+      z-index: 1;
+    }
+    .banner-slider::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 100%);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+    }
+    .hero-content h1 {
+      font-size: 24px;
+      font-weight: 900;
+      margin-bottom: 5px;
+      color: #fff;
+    }
+    .hero-content h1 span { color: var(--brand); }
+    .hero-content p {
+      font-size: 13px;
+      color: #ddd;
+      margin-bottom: 15px;
+    }
+    .btn-brand {
+      background: var(--brand);
+      color: #111;
+      padding: 10px 20px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: none;
+      box-shadow: 0 4px 15px rgba(255, 208, 0, 0.3);
+      transition: 0.3s;
+    }
+    .btn-brand:hover { transform: translateY(-2px); background: var(--brand-hover); }
+
+    /* العناوين الفرعية للسكشن */
+    .section-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .section-title a {
+      font-size: 13px;
+      color: var(--brand);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* --------------------------------------------------- */
+    /* الكروت: تصميم المنيو الموحد (عمودين متطابقين) */
+    /* --------------------------------------------------- */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr); 
+      gap: 10px; 
+    }
+    
+    .product-card, .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      padding: 8px; 
+      border: 1px solid rgba(255,255,255,0.03);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: transform 0.3s;
+      height: 100%; 
+      overflow: hidden; 
+    }
+
+    /* الصورة تملأ المكان العلوي بالكامل */
+    .product-card img {
+      width: calc(100% + 16px); 
+      margin: -8px -8px 6px -8px; 
+      height: 115px; 
+      object-fit: cover;
+      border-radius: var(--radius-sm) var(--radius-sm) 0 0; 
+      background: #2a2a2a;
+    }
+
+    /* اسم المنتج */
+    .product-card h3 {
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis; 
+    }
+
+    /* الوصف */
+    .product-card p, .card-desc {
+      font-size: 9px; 
+      color: rgba(255, 255, 255, 0.35); 
+      margin-bottom: 6px; 
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 1; 
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* السعر */
+    .price {
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--brand);
+      display: block;
+      margin-bottom: 8px;
+      margin-top: auto; 
+    }
+
+    /* زر أضف للسلة */
+    .add-cart-btn {
+      background: var(--brand);
+      color: #111;
+      border: none;
+      padding: 6px 10px; 
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 800;
+      width: 100%;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      transition: 0.3s;
+    }
+    .add-cart-btn::before {
+      content: '\f067'; 
+      font-family: "Font Awesome 5 Free";
+      font-weight: 900;
+      font-size: 10px;
+    }
+    .add-cart-btn:hover, .add-cart-btn:active {
+      background: var(--brand-hover);
+      transform: translateY(-2px);
+    }
+
+    /* زر المفضلة الدائري */
+    .fav-btn {
+      position: absolute;
+      top: 6px; 
+      left: 6px;
+      background: rgba(18, 18, 18, 0.6);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      border: 1px solid rgba(255,255,255,0.1);
+      width: 26px; 
+      height: 26px;
+      border-radius: 50%;
+      color: var(--text-main);
+      font-size: 12px; 
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: 0.3s;
+      z-index: 10;
+    }
+    .fav-btn.favorited {
+      color: var(--danger);
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+    .fav-btn:active { transform: scale(1.1); }
+
+    /* التقييمات */
+    .reviews-section {
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+    .review-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      padding: 8px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .review-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .swiper-pagination-bullet { background: var(--text-muted); }
+    .swiper-pagination-bullet-active { background: var(--brand); }
+
+    /* الفوتر */
+    .footer {
+      background: var(--bg-card);
+      padding: 30px 20px 100px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      text-align: center;
+    }
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .social-links a {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+    .social-links a:hover { background: var(--brand); color: #000; transform: translateY(-3px); }
+    .footer-text {
+      color: var(--text-muted);
+      font-size: 11px;
+    }
+
+    /* Navigation Bar السفلي للتطبيقات */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(30, 30, 30, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 10px;
+      padding-bottom: calc(10px + env(safe-area-inset-bottom));
+      z-index: 1000;
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 11px;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+    .nav-item i { font-size: 18px; }
+    .nav-item.active { color: var(--brand); }
+    .nav-item.active i { transform: scale(1.1); }
+    
+    .cart-badge {
+      position: absolute;
+      top: -3px;
+      right: -5px;
+      background: var(--danger);
+      color: #fff;
+      font-size: 9px;
+      font-weight: bold;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--bg-card);
+    }
+
+    /* إعدادات الشاشات الكبيرة الديسكتوب */
+    @media (min-width: 768px) {
+      .grid { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+      .product-card { padding: 12px; }
+      .product-card img { height: 160px; margin: -12px -12px 10px -12px; width: calc(100% + 24px); }
+      .product-card h3 { font-size: 16px; }
+      .product-card p, .card-desc { font-size: 12px; -webkit-line-clamp: 2; }
+      .price { font-size: 18px; }
+      .add-cart-btn { padding: 10px; font-size: 14px; }
+      
+      .hero-inner { height: 350px; padding: 40px; }
+      .hero-content h1 { font-size: 40px; }
+      .bottom-nav { display: none; } 
+      body { padding-bottom: 0; }
+    }
+    @media (min-width: 1024px) {
+      .grid { grid-template-columns: repeat(4, 1fr); }
+    }
+  </style>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="container flex">
-      <img id="logo-img" src="" alt="BB2 Burger" width="100">
-      <ul class="flex">
-        <li><a href="index.html" class="active">الرئيسية</a></li>
-        <li><a href="menu.html">المنيو</a></li>
-        <li><a href="favorites.html">المفضلة</a></li>
-        <li><a href="cart.html">السلة</a></li>
-      </ul>
-    </div>
-  </nav>
 
-  <section class="hero">
-    <div class="banner-slider"></div>
-    <div class="hero-content">
-      <h1 class="tit">الجودة هي طعمنا المفضل</h1>
-      <a href="BB2 Burger Portfclio_compressed.pdf" class="btn btn-brand">عرض Protofolio</a>
+  <!-- الهيدر العلوي -->
+  <header class="top-header">
+    <img id="logo-img" src="logo.png" alt="BB2 Burger">
+    <div class="user-actions">
+      <a href="favorites.html" class="icon-btn"><i class="far fa-heart"></i></a>
+    </div>
+  </header>
+
+  <!-- البانر الترحيبي -->
+  <section class="container hero">
+    <div class="hero-inner">
+      <div class="banner-slider"></div>
+      <div class="hero-content">
+        <h1>الجودة هي <span>طعمنا المفضل</span></h1>
+        <p>اكتشف أقوى طعم برجر باللحم البلدي الصافي 100%</p>
+        <a href="BB2 Burger Portfclio_compressed.pdf" class="btn-brand">
+          <i class="fas fa-file-pdf"></i> عرض المنيو
+        </a>
+      </div>
     </div>
   </section>
 
+  <!-- المنتجات المميزة -->
   <section class="container">
-    <h2 class="tit">منتجات مميزة</h2>
-    <div id="featured-grid" class="grid grid-3"></div>
+    <div class="section-title">
+      <span><i class="fas fa-star" style="color:var(--brand); margin-left:5px;"></i> الأكثر مبيعاً</span>
+      <a href="menu.html">عرض الكل <i class="fas fa-chevron-left"></i></a>
+    </div>
+    
+    <!-- هذه الحاوية يتم ملؤها من خلال app.js الخاص بك -->
+    <div id="featured-grid" class="grid"></div>
   </section>
 
-  <section class="container">
-    <h2 class="tit">تقييمات بعض العملاء</h2>
+  <!-- تقييمات العملاء -->
+  <section class="container reviews-section">
+    <div class="section-title">
+      <span><i class="fas fa-comment-dots" style="color:var(--brand); margin-left:5px;"></i> قالوا عنا</span>
+    </div>
     <div class="swiper reviews-slider">
       <div class="swiper-wrapper">
         <div class="swiper-slide">
           <div class="review-card">
             <img src="https://i.postimg.cc/Pf6Vfw3g/IMG-20250827-WA0023.jpg" alt="تقييم عميل 1" class="review-img">
-            <!-- <p class="review-caption">من عميل على واتساب</p> -->
           </div>
         </div>
         <div class="swiper-slide">
           <div class="review-card">
             <img src="https://i.postimg.cc/J4G6szSG/IMG-20250827-WA0024.jpg" alt="تقييم عميل 2" class="review-img">
-            <!-- <p class="review-caption">من تعليق على إنستجرام</p> -->
           </div>
         </div>
         <div class="swiper-slide">
           <div class="review-card">
             <img src="https://i.postimg.cc/LsMNQB51/IMG-20250827-WA0025.jpg" alt="تقييم عميل 3" class="review-img">
-            <!-- <p class="review-caption">من عميل على فيسبوك</p> -->
           </div>
         </div>
         <div class="swiper-slide">
           <div class="review-card">
             <img src="https://i.postimg.cc/vHkPfddX/IMG-20250827-WA0026.jpg" alt="تقييم عميل 4" class="review-img">
-            <!-- <p class="review-caption">من عميل على واتساب</p> -->
           </div>
         </div>
         <div class="swiper-slide">
           <div class="review-card">
             <img src="https://i.postimg.cc/G2LzdLk3/IMG-20250827-WA0027.jpg" alt="تقييم عميل 5" class="review-img">
-            <!-- <p class="review-caption">من تعليق على إنستجرام</p> -->
-          </div>
-        </div>
-        <div class="swiper-slide">
-          <div class="review-card">
-            <img src="https://i.postimg.cc/76K9LFV3/IMG-20250827-WA0028.jpg" alt="تقييم عميل 6" class="review-img">
-            <!-- <p class="review-caption">من عميل على فيسبوك</p> -->
-          </div>
-        </div>
-        <div class="swiper-slide">
-          <div class="review-card">
-            <img src="https://i.postimg.cc/D0Dcr1Rm/IMG-20250827-WA0029.jpg" alt="تقييم عميل 5" class="review-img">
-            <!-- <p class="review-caption">من تعليق على إنستجرام</p> -->
-          </div>
-        </div>
-        <div class="swiper-slide">
-          <div class="review-card">
-            <img src="https://i.postimg.cc/QCVbKf4R/IMG-20250827-WA0030.jpg" alt="تقييم عميل 5" class="review-img">
-            <!-- <p class="review-caption">من تعليق على إنستجرام</p> -->
-          </div>
-        </div>
-        <div class="swiper-slide">
-          <div class="review-card">
-            <img src="https://i.postimg.cc/9XN1HjzV/IMG-20250827-WA0031.jpg" alt="تقييم عميل 5" class="review-img">
-            <!-- <p class="review-caption">من تعليق على إنستجرام</p> -->
           </div>
         </div>
       </div>
-      <div class="swiper-button-next"></div>
-      <div class="swiper-button-prev"></div>
-      <div class="swiper-pagination"></div>
+      <div class="swiper-pagination" style="position: relative; margin-top: 15px;"></div>
     </div>
   </section>
 
+  <!-- الفوتر -->
   <footer class="footer">
-    <div class="container footer-grid">
-      <div class="footer-column">
-        <h3>التنقل</h3>
-        <ul>
-          <li><a href="index.html">الرئيسية</a></li>
-          <li><a href="menu.html">المنيو</a></li>
-          <li><a href="favorites.html">المفضلة</a></li>
-          <li><a href="cart.html">السلة</a></li>
-        </ul>
+    <div class="container">
+      <div class="social-links">
+        <a href="https://www.facebook.com/share/1EhgB6LvHR/"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.instagram.com/bb2burger"><i class="fab fa-instagram"></i></a>
+        <a href="https://wa.me/201006473229"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://system.smart-mate.co/profile/5526289899"><i class="fas fa-globe"></i></a>
       </div>
-      <div class="footer-column">
-        <h3>تواصلوا معنا</h3>
-        <ul>
-          <li><a href="https://www.facebook.com/share/1EhgB6LvHR/"><i class="fab fa-facebook"></i> فيسبوك</a></li>
-          <li><a href="https://www.instagram.com/bb2burger?igsh=MWhuenhwcWJ4YjFqMQ=="><i class="fab fa-instagram"></i> إنستجرام</a></li>
-          <li><a href="https://wa.me/201006473229"><i class="fab fa-whatsapp"></i> واتساب</a></li>
-          <li><a href="https://system.smart-mate.co/profile/5526289899"><i class="fas fa-globe"></i> سايت BB2</a></li>
-        </ul>
-      </div>
-      <div class="footer-column">
-        <h3>عن المطعم</h3>
-        <p id="footer-address"></p>
-        <p id="footer-hours"></p>
-        <p>© 2025 BB2 Burger</p>
-      </div>
+      <p class="footer-text" id="footer-address">المنصورة - حي الجامعة</p>
+      <p class="footer-text" id="footer-hours">مفتوح يومياً من 1 ظهراً حتى 3 فجراً</p>
+      <br>
+      <p class="footer-text">© 2025 BB2 Burger. جميع الحقوق محفوظة.</p>
     </div>
   </footer>
 
-  <div id="sticky-cart" class="sticky-cart" style="display: none;">
-    <span id="cart-count">0 عناصر</span>
-    <span id="cart-total">0 ج</span>
-    <a href="cart.html" class="btn btn-brand">الدفع</a>
-  </div>
+  <!-- النافبار السفلي الخاص بالموبايل -->
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item active">
+      <i class="fas fa-home"></i>
+      <span>الرئيسية</span>
+    </a>
+    <a href="menu.html" class="nav-item">
+      <i class="fas fa-hamburger"></i>
+      <span>المنيو</span>
+    </a>
+    <a href="favorites.html" class="nav-item">
+      <i class="far fa-heart"></i>
+      <span>المفضلة</span>
+    </a>
+    <a href="cart.html" class="nav-item" style="position: relative;">
+      <i class="fas fa-shopping-cart"></i>
+      <span>السلة</span>
+      <div class="cart-badge" id="cart-count">0</div>
+    </a>
+  </nav>
 
-  <div id="toast" style="display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #333; color: #fff; padding: 10px 20px; border-radius: 5px; z-index: 1000;"></div>
+  <!-- الإشعارات العائمة -->
+  <div id="toast" style="display: none; position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: var(--brand); color: #000; padding: 12px 25px; border-radius: 25px; font-weight: bold; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.3);"></div>
 
   <script type="text/javascript">
     var gk_isXlsx = false;
     var gk_xlsxFileLookup = {};
     var gk_fileData = {};
-    function filledCell(cell) {
-      return cell !== '' && cell != null;
-    }
+    function filledCell(cell) { return cell !== '' && cell != null; }
     function loadFileData(filename) {
       if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
         try {
@@ -155,9 +541,7 @@
           var headerRowIndex = filteredData.findIndex((row, index) =>
             row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
           );
-          if (headerRowIndex === -1 || headerRowIndex > 25) {
-            headerRowIndex = 0;
-          }
+          if (headerRowIndex === -1 || headerRowIndex > 25) { headerRowIndex = 0; }
           var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
           csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
           return csv;
@@ -171,22 +555,20 @@
   </script>
   <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
   <script src="app.js"></script>
+  
   <script>
     const swiper = new Swiper('.reviews-slider', {
-      slidesPerView: 2, // 2 صور جنب بعض على الموبايل والشاشات الصغيرة
-      spaceBetween: 10,
-      loop: false, // نزلنا الـ loop عشان الصور تظهر كلها (6 صور في 3 صفوف)
+      slidesPerView: 1.2, 
+      spaceBetween: 15,
+      centeredSlides: true,
+      loop: true,
       pagination: {
         el: '.swiper-pagination',
         clickable: true,
       },
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
       breakpoints: {
-        560: { slidesPerView: 2, spaceBetween: 15 }, // 2 صور على الشاشات المتوسطة
-        900: { slidesPerView: 3, spaceBetween: 20 }, // 3 صور على الشاشات الكبيرة
+        560: { slidesPerView: 2, centeredSlides: false },
+        900: { slidesPerView: 3, centeredSlides: false },
       },
     });
   </script>

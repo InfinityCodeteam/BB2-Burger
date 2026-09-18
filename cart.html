@@ -1,123 +1,455 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#121212">
   <title>السلة - BB2 Burger</title>
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+  <style>
+    /* المتغيرات الأساسية */
+    :root {
+      --bg-dark: #121212;
+      --bg-card: #1e1e1e;
+      --brand: #FFD000;
+      --brand-hover: #ffba00;
+      --whatsapp: #25D366;
+      --whatsapp-hover: #128C7E;
+      --text-main: #ffffff;
+      --text-muted: #a0a0a0;
+      --danger: #ef4444;
+      --success: #22c55e;
+      --radius-sm: 12px;
+      --radius-md: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: "Cairo", sans-serif;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+      padding-bottom: 90px;
+    }
+
+    .container {
+      padding: 0 15px;
+      max-width: 800px; 
+      margin: 0 auto;
+    }
+
+    /* النافبار العلوي */
+    .top-header {
+      position: fixed;
+      top: 0; left: 0; width: 100%;
+      background: rgba(18, 18, 18, 0.85);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      z-index: 100;
+      padding: 12px 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .top-header img { height: 35px; object-fit: contain; }
+
+    .icon-btn {
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-main);
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      display: flex; justify-content: center; align-items: center;
+      font-size: 16px; text-decoration: none; transition: 0.3s;
+    }
+    .icon-btn:hover { background: var(--brand); color: #111; }
+
+    .page-header { margin-top: 75px; margin-bottom: 20px; }
+    .page-title { font-size: 22px; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 10px; }
+    .page-title i { color: var(--brand); }
+
+    /* --------------------------------------------------- */
+    /* تنسيق كروت المنتجات داخل السلة */
+    /* --------------------------------------------------- */
+    .grid-1 { display: grid; grid-template-columns: 1fr; gap: 12px; }
+
+    #cart-list .card {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 15px;
+      background: var(--bg-card);
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      position: relative; /* ضروري لزر الحذف */
+    }
+
+    #cart-list .card img {
+      width: 90px;
+      height: 90px;
+      border-radius: 10px;
+      object-fit: cover;
+      margin: 0;
+      flex-shrink: 0;
+      background: #2a2a2a;
+    }
+
+    #cart-list .card > div {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    #cart-list .card h3 { font-size: 15px; font-weight: 800; margin-bottom: 2px; color: #fff; }
+    #cart-list .card p { font-size: 11px; color: var(--text-muted); margin-bottom: 5px; }
+    #cart-list .price { font-size: 16px; font-weight: 900; color: var(--brand); margin-bottom: 0; }
+
+    /* --------------------------------------------------- */
+    /* تصميم أزرار الكمية (+ / -) البديلة لحقل النص */
+    /* --------------------------------------------------- */
+    .cart-qty-control {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 5px;
+      border-radius: 10px;
+      width: max-content;
+    }
+    .c-qty-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex; justify-content: center; align-items: center;
+      transition: 0.2s;
+    }
+    .c-qty-btn.minus { background: #333; color: #fff; }
+    .c-qty-btn.plus { background: var(--brand); color: #111; }
+    .c-qty-btn:active { transform: scale(0.9); }
+    .c-qty-display {
+      font-size: 15px;
+      font-weight: 900;
+      min-width: 20px;
+      text-align: center;
+      color: #fff;
+    }
+
+    /* --------------------------------------------------- */
+    /* زر الحذف (سلة المهملات) */
+    /* --------------------------------------------------- */
+    #cart-list button.remove-btn,
+    #cart-list button[onclick*="remove"] {
+      position: absolute;
+      top: 12px;
+      left: 12px; /* أقصى اليسار */
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--danger);
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 14px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    #cart-list button.remove-btn:hover,
+    #cart-list button[onclick*="remove"]:hover { background: var(--danger); color: #fff; transform: translateY(-2px); }
+
+    /* ملخص السعر الإجمالي */
+    .summary-card {
+      background: linear-gradient(135deg, rgba(255,208,0,0.1) 0%, rgba(255,208,0,0.02) 100%);
+      border: 1px solid rgba(255, 208, 0, 0.2);
+      border-radius: var(--radius-sm);
+      padding: 20px; margin: 20px 0;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .summary-title { font-size: 16px; font-weight: 700; color: #fff; }
+    #grand-total { font-size: 24px; font-weight: 900; color: var(--brand); }
+
+    /* نموذج إتمام الطلب */
+    .checkout-form {
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      border: 1px solid rgba(255,255,255,0.03);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    }
+    .checkout-form h3 { font-size: 18px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+    .checkout-form h3 i { color: var(--brand); }
+
+    .form-group { margin-bottom: 15px; display: flex; flex-direction: column; }
+    .form-group label { font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 14px 15px; border-radius: 12px; color: #fff; font-family: "Cairo", sans-serif;
+      font-size: 14px; font-weight: 600; transition: all 0.3s; outline: none;
+    }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      border-color: var(--brand); background: rgba(255, 255, 255, 0.06);
+    }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+    .select-wrapper { position: relative; }
+    .select-wrapper select { appearance: none; cursor: pointer; }
+    .select-wrapper::after {
+      content: '\f107'; font-family: "Font Awesome 5 Free"; font-weight: 900;
+      position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
+      color: var(--text-muted); pointer-events: none;
+    }
+
+    #whatsapp-order {
+      background: var(--whatsapp); color: #fff; border: none; width: 100%;
+      padding: 16px; border-radius: 25px; font-size: 16px; font-weight: 900;
+      margin-top: 15px; cursor: pointer; display: flex; justify-content: center;
+      align-items: center; gap: 10px; box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3); transition: 0.3s;
+    }
+    #whatsapp-order i { font-size: 20px; }
+    #whatsapp-order:hover { background: var(--whatsapp-hover); transform: translateY(-2px); }
+    #whatsapp-order:active { transform: scale(0.98); }
+
+    /* النافبار السفلي */
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; width: 100%;
+      background: rgba(30, 30, 30, 0.95); backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.05);
+      display: flex; justify-content: space-around; padding: 10px 10px;
+      padding-bottom: calc(10px + env(safe-area-inset-bottom)); z-index: 1000;
+    }
+    .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); text-decoration: none; font-size: 11px; font-weight: 600; transition: 0.3s; }
+    .nav-item i { font-size: 18px; }
+    .nav-item.active { color: var(--brand); }
+    .nav-item.active i { transform: scale(1.1); }
+    
+    .cart-badge {
+      position: absolute; top: -3px; right: -5px; background: var(--danger);
+      color: #fff; font-size: 9px; font-weight: bold; width: 16px; height: 16px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--bg-card);
+    }
+
+    /* الفوتر */
+    .footer {
+      background: var(--bg-card); padding: 30px 20px 100px;
+      border-top: 1px solid rgba(255,255,255,0.05); text-align: center; margin-top: 40px;
+    }
+    .social-links { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
+    .social-links a { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.05); color: var(--text-main); display: flex; align-items: center; justify-content: center; font-size: 18px; text-decoration: none; transition: 0.3s; }
+    .social-links a:hover { background: var(--brand); color: #000; }
+    .footer-text { color: var(--text-muted); font-size: 11px; }
+
+    @media (min-width: 768px) { .bottom-nav { display: none; } body { padding-bottom: 0; } }
+  </style>
 </head>
 <body>
-  <nav class="navbar">
-    <div class="container flex">
-      <img id="logo-img" src="" alt="BB2 Burger" width="100">
-      <ul class="flex">
-        <li><a href="index.html">الرئيسية</a></li>
-        <li><a href="menu.html">المنيو</a></li>
-        <li><a href="favorites.html">المفضلة</a></li>
-        <li><a href="cart.html" class="active">السلة</a></li>
-      </ul>
-    </div>
-  </nav>
 
+  <!-- الهيدر العلوي -->
+  <header class="top-header">
+    <img id="logo-img" src="logo.png" alt="BB2 Burger">
+    <a href="index.html" class="icon-btn"><i class="fas fa-home"></i></a>
+  </header>
+
+  <!-- محتوى السلة -->
   <section class="container">
-    <h2 class="tit">سلة التسوق</h2>
-    <div id="cart-list" class="grid grid-1"></div>
-    <h3><span id="grand-total">0 ج</span></h3>
-    <div class="card">
-      <label>الاسم: <input id="name" type="text" required></label>
-      <label>رقم الموبايل: <input id="mobile" type="tel" required></label>
-      <label>العنوان: <input id="address" type="text" required></label>
-      <label>ملاحظات: <textarea id="notes"></textarea></label>
-      <label>طريقة الدفع:
-        <select id="payment" required>
-          <option value="كاش عند الاستلام">كاش عند الاستلام</option>
-          <option value="انستا باي">انستا باي</option>
-          <option value="فودافون كاش">فودافون كاش</option>
-          <option value="اتصالات كاش">اتصالات كاش</option>
-        </select>
-      </label>
-      <button id="whatsapp-order" class="btn btn-brand">إرسال الطلب عبر واتساب</button>
+    <div class="page-header">
+      <h2 class="page-title"><i class="fas fa-shopping-cart"></i> سلة التسوق</h2>
+    </div>
+    
+    <!-- قائمة المنتجات المضافة (يتم حقنها بالجافاسكريبت) -->
+    <div id="cart-list" class="grid-1"></div>
+    
+    <!-- ملخص السعر الإجمالي -->
+    <div class="summary-card">
+      <span class="summary-title">الإجمالي المطلوب:</span>
+      <span id="grand-total">0 ج</span>
+    </div>
+
+    <!-- بيانات الدفع والتوصيل -->
+    <div class="checkout-form">
+      <h3><i class="fas fa-map-marker-alt"></i> بيانات التوصيل</h3>
+      
+      <div class="form-group">
+        <label>الاسم الكريم</label>
+        <input id="name" type="text" placeholder="أدخل اسمك بالكامل" required>
+      </div>
+
+      <div class="form-group">
+        <label>رقم الموبايل</label>
+        <input id="mobile" type="tel" placeholder="01xxxxxxxxx" required>
+      </div>
+
+      <div class="form-group">
+        <label>العنوان بالتفصيل</label>
+        <input id="address" type="text" placeholder="المنطقة، الشارع، رقم العمارة، الدور" required>
+      </div>
+
+      <div class="form-group">
+        <label>ملاحظات إضافية (اختياري)</label>
+        <textarea id="notes" placeholder="أمثلة: بدون بصل، صوص زيادة..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>طريقة الدفع</label>
+        <div class="select-wrapper">
+          <select id="payment" required>
+            <option value="كاش عند الاستلام">كاش عند الاستلام</option>
+            <option value="انستا باي">انستا باي</option>
+            <option value="فودافون كاش">فودافون كاش</option>
+            <option value="اتصالات كاش">اتصالات كاش</option>
+          </select>
+        </div>
+      </div>
+
+      <button id="whatsapp-order"><i class="fab fa-whatsapp"></i> إرسال الطلب عبر واتساب</button>
     </div>
   </section>
 
+  <!-- الفوتر -->
   <footer class="footer">
-    <div class="container footer-grid">
-      <div class="footer-column">
-        <h3>التنقل</h3>
-        <ul>
-          <li><a href="index.html">الرئيسية</a></li>
-          <li><a href="menu.html">المنيو</a></li>
-          <li><a href="favorites.html">المفضلة</a></li>
-          <li><a href="cart.html">السلة</a></li>
-        </ul>
+    <div class="container">
+      <div class="social-links">
+        <a href="https://www.facebook.com/share/1EhgB6LvHR/"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.instagram.com/bb2burger"><i class="fab fa-instagram"></i></a>
+        <a href="https://wa.me/201006473229"><i class="fab fa-whatsapp"></i></a>
+        <a href="https://system.smart-mate.co/profile/5526289899"><i class="fas fa-globe"></i></a>
       </div>
-      <div class="footer-column">
-        <h3>تواصلوا معنا</h3>
-        <ul>
-          <li><a href="https://www.facebook.com/share/1EhgB6LvHR/"><i class="fab fa-facebook"></i> فيسبوك</a></li>
-          <li><a href="https://www.instagram.com/bb2burger?igsh=MWhuenhwcWJ4YjFqMQ=="><i class="fab fa-instagram"></i> إنستجرام</a></li>
-          <li><a href="https://wa.me/201006473229"><i class="fab fa-whatsapp"></i> واتساب</a></li>
-          <li><a href="https://system.smart-mate.co/profile/5526289899"><i class="fas fa-globe"></i> سايت BB2</a></li>
-        </ul>
-      </div>
-      <div class="footer-column">
-        <h3>عن المطعم</h3>
-        <p id="footer-address"></p>
-        <p id="footer-hours"></p>
-        <p>© 2025 BB2 Burger</p>
-      </div>
+      <p class="footer-text" id="footer-address">المنصورة - حي الجامعة</p>
+      <p class="footer-text" id="footer-hours">مفتوح يومياً من 1 ظهراً حتى 3 فجراً</p>
+      <p class="footer-text">© 2025 BB2 Burger. جميع الحقوق محفوظة.</p>
     </div>
   </footer>
 
-  <div id="sticky-cart" class="sticky-cart" style="display: none;">
-    <span id="cart-count">0 عناصر</span>
+  <!-- النافبار السفلي -->
+  <nav class="bottom-nav">
+    <a href="index.html" class="nav-item">
+      <i class="fas fa-home"></i>
+      <span>الرئيسية</span>
+    </a>
+    <a href="menu.html" class="nav-item">
+      <i class="fas fa-hamburger"></i>
+      <span>المنيو</span>
+    </a>
+    <a href="favorites.html" class="nav-item">
+      <i class="far fa-heart"></i>
+      <span>المفضلة</span>
+    </a>
+    <a href="cart.html" class="nav-item active" style="position: relative;">
+      <i class="fas fa-shopping-cart"></i>
+      <span>السلة</span>
+      <div class="cart-badge" id="cart-count">0</div>
+    </a>
+  </nav>
+
+  <!-- السلة اللاصقة القديمة (مخفية) -->
+  <div id="sticky-cart" style="display: none !important;">
     <span id="cart-total">0 ج</span>
-    <a href="cart.html" class="btn btn-brand">الدفع</a>
   </div>
 
-  <div id="toast" style="display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #333; color: #fff; padding: 10px 20px; border-radius: 5px; z-index: 1000;"></div>
+  <div id="toast" style="display: none; position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: var(--brand); color: #000; padding: 12px 25px; border-radius: 25px; font-weight: bold; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.3);"></div>
 
   <script src="app.js"></script>
+
+  <!-- الكود الذكي لتعديل شكل (حقل الكمية) و (زر المسح) برمجياً دون تخريب app.js -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const cartList = document.getElementById('cart-list');
+      if(!cartList) return;
+
+      // استخدام مراقب التغيرات لمراقبة ما يضعه app.js داخل السلة
+      const observer = new MutationObserver(() => {
+        
+        // 1. استبدال حقل الإدخال الرقمي بأزرار (+) و (-)
+        const qtyInputs = cartList.querySelectorAll('input[type="number"]');
+        qtyInputs.forEach(input => {
+          if(input.hasAttribute('data-enhanced')) return;
+          input.setAttribute('data-enhanced', 'true');
+          
+          input.style.display = 'none'; // إخفاء الحقل الأصلي
+
+          // إنشاء الغلاف والأزرار
+          const wrapper = document.createElement('div');
+          wrapper.className = 'cart-qty-control';
+
+          const plusBtn = document.createElement('button');
+          plusBtn.className = 'c-qty-btn plus';
+          plusBtn.innerHTML = '+';
+
+          const display = document.createElement('span');
+          display.className = 'c-qty-display';
+          display.innerText = input.value || "1";
+
+          const minusBtn = document.createElement('button');
+          minusBtn.className = 'c-qty-btn minus';
+          minusBtn.innerHTML = '-';
+
+          wrapper.appendChild(plusBtn);
+          wrapper.appendChild(display);
+          wrapper.appendChild(minusBtn);
+
+          // وضعهم بجوار الحقل المخفي
+          input.parentNode.insertBefore(wrapper, input.nextSibling);
+
+          // تفعيل الأزرار لتعديل الحقل الأصلي وتشغيل أحداث الجافاسكريبت القديمة
+          plusBtn.onclick = (e) => {
+            e.preventDefault();
+            input.value = parseInt(input.value) + 1;
+            display.innerText = input.value;
+            input.dispatchEvent(new Event('change', {bubbles: true}));
+          };
+
+          minusBtn.onclick = (e) => {
+            e.preventDefault();
+            if(parseInt(input.value) > 1) {
+              input.value = parseInt(input.value) - 1;
+              display.innerText = input.value;
+              input.dispatchEvent(new Event('change', {bubbles: true}));
+            }
+          };
+        });
+
+        // 2. تجميل وتعديل زر الحذف (بدون تخريب وظائفه الأصلية)
+        const allButtons = cartList.querySelectorAll('button');
+        allButtons.forEach(btn => {
+          const text = btn.innerText.trim();
+          const onclickAttr = btn.getAttribute('onclick') || '';
+          
+          // نبحث عن أي زر يدل على الحذف
+          if(text.includes('إزالة') || text.includes('مسح') || text.includes('حذف') || btn.classList.contains('remove-btn') || onclickAttr.includes('remove') || onclickAttr.includes('delete')) {
+            if(btn.hasAttribute('data-enhanced')) return;
+            btn.setAttribute('data-enhanced', 'true');
+            
+            // هنا التعديل: نضيف الكلاس الجديد للتصميم (بدون مسح القديم عشان app.js يفضل شغال)
+            btn.classList.add('remove-btn'); 
+            
+            // هنا التعديل: نضع الأيقونة مع إيقاف تفاعلها (pointer-events: none) لتمرير النقرة للزر الأصلي
+            btn.innerHTML = '<i class="fas fa-trash-alt" style="pointer-events: none;"></i>'; 
+          }
+        });
+      });
+
+      // تشغيل المراقبة على عنصر السلة
+      observer.observe(cartList, { childList: true, subtree: true });
+    });
+  </script>
 </body>
 </html>
