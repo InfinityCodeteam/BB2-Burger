@@ -189,11 +189,9 @@
       transform: translateY(-2px);
     }
 
-    /* --------------------------------------------------- */
-    /* التعديل الجديد: تصميم زر الإزالة من المفضلة         */
-    /* --------------------------------------------------- */
+    /* زر الإزالة من المفضلة */
     .remove-btn, .btn-danger, .remove-fav-btn {
-      background: rgba(239, 68, 68, 0.15); /* أحمر شفاف قليلاً */
+      background: rgba(239, 68, 68, 0.15); 
       color: var(--danger);
       border: 1px solid rgba(239, 68, 68, 0.3);
       padding: 6px 10px;
@@ -206,17 +204,15 @@
       justify-content: center;
       align-items: center;
       gap: 5px;
-      margin-top: 6px; /* مسافة بينه وبين زر أضف للسلة لو موجودين مع بعض */
+      margin-top: 6px; 
       transition: 0.3s;
     }
-    /* وضع أيقونة سلة المهملات برمجياً بالـ CSS */
     .remove-btn::before, .remove-fav-btn::before {
-      content: '\f2ed'; /* كود أيقونة Trash من FontAwesome */
+      content: '\f2ed'; 
       font-family: "Font Awesome 5 Free";
       font-weight: 900;
       font-size: 11px;
     }
-    /* تأثير عند الضغط أو الوقوف عليه */
     .remove-btn:hover, .remove-btn:active, .btn-danger:hover, .remove-fav-btn:hover {
       background: var(--danger);
       color: #fff;
@@ -251,9 +247,7 @@
     }
     .fav-btn:active { transform: scale(1.1); }
 
-    /* --------------------------------------------------- */
     /* Empty State */
-    /* --------------------------------------------------- */
     .empty-state {
       display: flex;
       flex-direction: column;
@@ -398,7 +392,7 @@
       <h2 class="page-title"><i class="fas fa-heart"></i> منتجاتي المفضلة</h2>
     </div>
     
-    <!-- شبكة المنتجات (يتم حقنها من الجافاسكريبت) -->
+    <!-- شبكة المنتجات -->
     <div id="favorites-grid" class="grid"></div>
     
     <!-- التصميم الأنيق لحالة عدم وجود مفضلة -->
@@ -441,11 +435,16 @@
     <a href="cart.html" class="nav-item" style="position: relative;">
       <i class="fas fa-shopping-cart"></i>
       <span>السلة</span>
-      <div class="cart-badge" id="cart-count">0</div>
+      <div class="cart-badge" id="bottom-badge" style="display: none;">0</div>
     </a>
   </nav>
 
-  <!-- الإشعارات العائمة -->
+  <!-- السلة الأساسية المخفية -->
+  <div id="sticky-cart" style="display: none !important;">
+    <span id="cart-count">0 عناصر</span>
+    <span id="cart-total">0 ج</span>
+  </div>
+
   <div id="toast" style="display: none; position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: var(--brand); color: #000; padding: 12px 25px; border-radius: 25px; font-weight: bold; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.3);"></div>
 
   <script type="text/javascript">
@@ -478,5 +477,27 @@
   </script>
 
   <script src="app.js"></script>
+
+  <!-- كود المزامنة الذكي لتحديث رقم السلة -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hiddenCartCount = document.getElementById('cart-count');
+      const bottomBadge = document.getElementById('bottom-badge');
+      
+      if (hiddenCartCount && bottomBadge) {
+        const updateBadge = () => {
+          const text = hiddenCartCount.innerText || '';
+          const number = text.replace(/[^0-9]/g, ''); 
+          bottomBadge.innerText = number || '0';
+          bottomBadge.style.display = (number && number !== '0') ? 'flex' : 'none'; 
+        };
+        
+        updateBadge(); 
+        
+        const badgeObserver = new MutationObserver(updateBadge);
+        badgeObserver.observe(hiddenCartCount, { childList: true, characterData: true, subtree: true });
+      }
+    });
+  </script>
 </body>
 </html>

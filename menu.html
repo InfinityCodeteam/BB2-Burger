@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
+  <!-- إعدادات الشاشة للموبايل والتطبيقات -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#121212">
   <title>المنيو - BB2 Burger</title>
@@ -174,13 +175,12 @@
       text-overflow: ellipsis; 
     }
 
-    /* الوصف: مهمش تماماً، سطر واحد، ومقصوص (لن يظهر كاملاً هنا) */
+    /* الوصف: مهمش تماماً، سطر واحد، ومقصوص */
     .product-card p, .card-desc {
-      font-size: 9px; /* خط صغير جداً */
-      color: rgba(255, 255, 255, 0.35); /* لون باهت ومهمش */
+      font-size: 9px; 
+      color: rgba(255, 255, 255, 0.35); 
       margin-bottom: 6px; 
       line-height: 1.3;
-      /* إجبار النص على سطر واحد فقط بقوة */
       display: -webkit-box;
       -webkit-line-clamp: 1; 
       -webkit-box-orient: vertical;
@@ -195,10 +195,10 @@
       color: var(--brand);
       display: block;
       margin-bottom: 8px;
-      margin-top: auto; /* لدفع السعر والزرار لأسفل الكارت */
+      margin-top: auto; 
     }
 
-    /* زر أضف للسلة - مصغر قليلاً ليناسب حجم الكارت الجديد */
+    /* زر أضف للسلة */
     .add-cart-btn {
       background: var(--brand);
       color: #111;
@@ -403,9 +403,15 @@
     <a href="cart.html" class="nav-item" style="position: relative;">
       <i class="fas fa-shopping-cart"></i>
       <span>السلة</span>
-      <div class="cart-badge" id="cart-count">0</div>
+      <div class="cart-badge" id="bottom-badge" style="display: none;">0</div>
     </a>
   </nav>
+
+  <!-- السلة الأساسية المخفية (ضرورية لعمل app.js) -->
+  <div id="sticky-cart" style="display: none !important;">
+    <span id="cart-count">0 عناصر</span>
+    <span id="cart-total">0 ج</span>
+  </div>
 
   <!-- الإشعارات العائمة -->
   <div id="toast" style="display: none; position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: var(--brand); color: #000; padding: 12px 25px; border-radius: 25px; font-weight: bold; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.3);"></div>
@@ -440,5 +446,27 @@
   </script>
 
   <script src="app.js"></script>
+
+  <!-- كود المزامنة الذكي لتحديث رقم السلة -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const hiddenCartCount = document.getElementById('cart-count');
+      const bottomBadge = document.getElementById('bottom-badge');
+      
+      if (hiddenCartCount && bottomBadge) {
+        const updateBadge = () => {
+          const text = hiddenCartCount.innerText || '';
+          const number = text.replace(/[^0-9]/g, ''); 
+          bottomBadge.innerText = number || '0';
+          bottomBadge.style.display = (number && number !== '0') ? 'flex' : 'none'; 
+        };
+        
+        updateBadge(); 
+        
+        const badgeObserver = new MutationObserver(updateBadge);
+        badgeObserver.observe(hiddenCartCount, { childList: true, characterData: true, subtree: true });
+      }
+    });
+  </script>
 </body>
 </html>

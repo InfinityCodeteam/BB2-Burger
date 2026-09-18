@@ -18,283 +18,68 @@
       --text-main: #ffffff;
       --text-muted: #a0a0a0;
       --danger: #ef4444;
-      --success: #22c55e;
       --radius-sm: 12px;
       --radius-md: 20px;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { font-family: "Cairo", sans-serif; background-color: var(--bg-dark); color: var(--text-main); line-height: 1.6; overflow-x: hidden; padding-bottom: 100px; }
+    .container { padding: 0 15px; max-width: 800px; margin: 0 auto; }
 
-    body {
-      font-family: "Cairo", sans-serif;
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      line-height: 1.6;
-      overflow-x: hidden;
-      padding-bottom: 100px; /* مساحة للشريط السفلي اللاصق */
-    }
-
-    .container {
-      padding: 0 15px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    /* شريط التنقل العلوي (شفاف فوق الصورة) */
-    .top-header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
-      z-index: 100;
-      padding: 15px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .icon-btn {
-      background: rgba(18, 18, 18, 0.5);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: var(--text-main);
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 18px;
-      text-decoration: none;
-      transition: 0.3s;
-      cursor: pointer;
-    }
+    .top-header { position: fixed; top: 0; left: 0; width: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%); z-index: 100; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+    .icon-btn { background: rgba(18, 18, 18, 0.5); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); color: var(--text-main); width: 40px; height: 40px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 18px; text-decoration: none; transition: 0.3s; cursor: pointer; }
     .icon-btn:hover { background: var(--brand); color: #000; border-color: var(--brand); }
-    
-    /* زر المفضلة */
-    .fav-btn.favorited {
-      color: var(--danger);
-      background: rgba(239, 68, 68, 0.2);
-      border-color: var(--danger);
-    }
-    .fav-btn.favorited i { font-weight: 900; } /* أيقونة مصمتة عند الإعجاب */
+    .fav-btn.favorited { color: var(--danger); background: rgba(239, 68, 68, 0.2); border-color: var(--danger); }
+    .fav-btn.favorited i { font-weight: 900; } 
 
-    /* منطقة تفاصيل المنتج (صورة + نصوص) */
-    #product-details {
-      margin-top: 0; /* لأن الصورة هتبدأ من أول الشاشة */
-      padding-bottom: 20px;
-    }
+    #product-details { margin-top: 0; padding-bottom: 20px; }
+    #product-details img { width: 100vw; height: 40vh; object-fit: cover; margin-left: -15px; margin-right: -15px; border-radius: 0 0 35px 35px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); background: #2a2a2a; }
+    #product-details h2 { font-size: 26px; font-weight: 900; margin-top: 20px; color: #fff; }
+    #product-details p { font-size: 14px; color: var(--text-muted); line-height: 1.8; margin-top: 8px; }
 
-    /* تنسيق العناصر التي يتم حقنها من الجافاسكريبت */
-    #product-details img {
-      width: 100vw;
-      height: 40vh; /* تأخذ 40% من طول الشاشة */
-      object-fit: cover;
-      margin-left: -15px; /* لإلغاء الـ padding الخاص بالكونتينر */
-      margin-right: -15px;
-      border-radius: 0 0 35px 35px; /* حواف سفلية دائرية */
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-      background: #2a2a2a;
-    }
-
-    #product-details h2, #product-details h3 {
-      font-size: 26px;
-      font-weight: 900;
-      margin-top: 20px;
-      color: #fff;
-    }
-
-    #product-details p {
-      font-size: 14px;
-      color: var(--text-muted);
-      line-height: 1.8;
-      margin-top: 8px;
-    }
-
-    /* منطقة الخيارات (الحجم، الكومبو، الإضافات) */
-    .options-card {
-      background: var(--bg-card);
-      border-radius: var(--radius-md);
-      padding: 20px;
-      margin-top: 10px;
-      border: 1px solid rgba(255,255,255,0.03);
-      box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-    }
-
-    .option-group {
-      margin-bottom: 25px;
-    }
+    .options-card { background: var(--bg-card); border-radius: var(--radius-md); padding: 20px; margin-top: 10px; border: 1px solid rgba(255,255,255,0.03); box-shadow: 0 5px 20px rgba(0,0,0,0.2); }
+    .option-group { margin-bottom: 25px; }
     .option-group:last-child { margin-bottom: 0; }
-    
-    .option-title {
-      font-size: 16px;
-      font-weight: 800;
-      margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+    .option-title { font-size: 16px; font-weight: 800; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
     .option-title i { color: var(--brand); }
 
-    /* تنسيق قائمة اختيار الحجم (Select) */
-    .custom-select {
-      position: relative;
-      width: 100%;
+    /* 🌟 أزرار السنجل والدابل وتنسيق السعر بداخلها */
+    .size-selector { display: flex; gap: 10px; background: rgba(255, 255, 255, 0.03); padding: 6px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.05); }
+    .size-btn { 
+      flex: 1; padding: 8px; border-radius: 12px; border: none; 
+      background: transparent; color: var(--text-muted); 
+      font-family: "Cairo", sans-serif; font-size: 15px; font-weight: 800; 
+      cursor: pointer; transition: 0.3s; 
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
     }
-    .custom-select select {
-      width: 100%;
-      background: #2a2a2a;
-      color: #fff;
-      border: 1px solid rgba(255,255,255,0.1);
-      padding: 14px 15px;
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: 600;
-      font-family: "Cairo", sans-serif;
-      appearance: none;
-      outline: none;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    .custom-select select:focus { border-color: var(--brand); }
-    .custom-select::after {
-      content: '\f107'; /* سهم لأسفل */
-      font-family: "Font Awesome 5 Free";
-      font-weight: 900;
-      position: absolute;
-      left: 15px; /* لأن الاتجاه RTL */
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-muted);
-      pointer-events: none;
-    }
+    .size-btn small { font-size: 12px; font-weight: 700; opacity: 0.8; }
+    .size-btn.active { background: var(--brand); color: #111; box-shadow: 0 4px 10px rgba(255, 208, 0, 0.2); }
+    .size-btn.active small { color: #111; }
+    .size-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
-    /* تنسيق الكومبو والإضافات */
-    label.checkbox-label, #addons label {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: rgba(255,255,255,0.02);
-      padding: 14px 15px;
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.05);
-      margin-bottom: 10px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 600;
-      transition: 0.3s;
-    }
-    label.checkbox-label:hover, #addons label:hover {
-      background: rgba(255,255,255,0.05);
-      border-color: rgba(255,208,0,0.3);
-    }
-    input[type="checkbox"] {
-      width: 20px;
-      height: 20px;
-      accent-color: var(--brand);
-      cursor: pointer;
-    }
+    label.checkbox-label, #addons label { display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.02); padding: 14px 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 10px; cursor: pointer; font-size: 14px; font-weight: 600; transition: 0.3s; }
+    label.checkbox-label:hover, #addons label:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,208,0,0.3); }
+    input[type="checkbox"] { width: 20px; height: 20px; accent-color: var(--brand); cursor: pointer; }
 
-    /* التحكم في الكمية */
-    .quantity-control {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(255,255,255,0.02);
-      padding: 12px 20px;
-      border-radius: 15px;
-      border: 1px solid rgba(255,255,255,0.05);
-    }
-    .qty-buttons {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-    .qty-btn {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      border: none;
-      font-size: 20px;
-      font-weight: 900;
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transition: 0.2s;
-    }
+    .quantity-control { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); padding: 12px 20px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); }
+    .qty-buttons { display: flex; align-items: center; gap: 15px; }
+    .qty-btn { width: 38px; height: 38px; border-radius: 10px; border: none; font-size: 20px; font-weight: 900; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: 0.2s; }
     .qty-btn.minus { background: #333; color: #fff; }
     .qty-btn.plus { background: var(--brand); color: #111; }
     .qty-btn:active { transform: scale(0.9); }
-    .qty-display {
-      font-size: 18px;
-      font-weight: 900;
-      min-width: 25px;
-      text-align: center;
-    }
+    .qty-display { font-size: 18px; font-weight: 900; min-width: 25px; text-align: center; }
 
-    /* الشريط السفلي الثابت (أضف للسلة) */
-    .product-action-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: rgba(30, 30, 30, 0.95);
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-      padding: 15px 20px;
-      padding-bottom: calc(15px + env(safe-area-inset-bottom));
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-top: 1px solid rgba(255,255,255,0.05);
-      z-index: 1000;
-      box-shadow: 0 -5px 20px rgba(0,0,0,0.3);
-    }
-    
+    .product-action-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(30, 30, 30, 0.95); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); padding: 15px 20px; padding-bottom: calc(15px + env(safe-area-inset-bottom)); display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.05); z-index: 1000; box-shadow: 0 -5px 20px rgba(0,0,0,0.3); }
     .price-wrap { display: flex; flex-direction: column; }
     .price-label { font-size: 12px; color: var(--text-muted); font-weight: 600; }
     #total-price { font-size: 22px; font-weight: 900; color: var(--brand); margin: 0; }
-
-    .btn-add {
-      background: var(--brand);
-      color: #111;
-      border: none;
-      padding: 14px 25px;
-      border-radius: 25px;
-      font-size: 16px;
-      font-weight: 800;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 5px 15px rgba(255, 208, 0, 0.3);
-      transition: 0.3s;
-    }
+    .btn-add { background: var(--brand); color: #111; border: none; padding: 14px 25px; border-radius: 25px; font-size: 16px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 10px; box-shadow: 0 5px 15px rgba(255, 208, 0, 0.3); transition: 0.3s; }
     .btn-add:hover { background: var(--brand-hover); transform: translateY(-2px); }
     .btn-add:active { transform: scale(0.95); }
 
-    /* الفوتر */
-    .footer {
-      background: var(--bg-card);
-      padding: 30px 20px;
-      text-align: center;
-      margin-top: 40px;
-      border-top: 1px solid rgba(255,255,255,0.05);
-    }
+    .footer { background: var(--bg-card); padding: 30px 20px; text-align: center; margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.05); }
     .social-links { display: flex; justify-content: center; gap: 15px; margin-bottom: 20px; }
-    .social-links a {
-      width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.05);
-      color: var(--text-main); display: flex; align-items: center; justify-content: center;
-      font-size: 18px; text-decoration: none; transition: 0.3s;
-    }
+    .social-links a { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.05); color: var(--text-main); display: flex; align-items: center; justify-content: center; font-size: 18px; text-decoration: none; transition: 0.3s; }
     .social-links a:hover { background: var(--brand); color: #000; }
     .footer-text { color: var(--text-muted); font-size: 11px; }
 
@@ -302,50 +87,39 @@
 </head>
 <body>
 
-  <!-- شريط علوي شفاف للرجوع والمفضلة -->
   <header class="top-header">
     <a href="javascript:history.back()" class="icon-btn"><i class="fas fa-arrow-right"></i></a>
-    <!-- تم نقل زر المفضلة هنا ليصبح أكثر احترافية (الجافاسكريبت سيتعرف عليه عبر الـ id) -->
     <button id="fav-btn" class="icon-btn fav-btn"><i class="far fa-heart"></i></button>
   </header>
 
-  <!-- تفاصيل المنتج الأساسية -->
   <section class="container">
-    <!-- الجافاسكريبت سيحقن الصورة، العنوان، والوصف هنا -->
     <div id="product-details">
       <p style="text-align:center; padding-top: 100px;">جاري تحميل تفاصيل المنتج...</p>
     </div>
 
-    <!-- كارت الخيارات والإضافات -->
     <div class="options-card">
       
-      <!-- اختيار الحجم -->
-      <div class="option-group">
+      <!-- اختيار الحجم بالتصميم الجديد -->
+      <div class="option-group" id="size-group">
         <div class="option-title"><i class="fas fa-expand-arrows-alt"></i> اختر الحجم</div>
-        <div class="custom-select">
-          <select id="size">
-            <option value="single">سينجل (Single)</option>
-            <option value="double">دابل (Double)</option>
-          </select>
+        <div class="size-selector">
+          <button type="button" class="size-btn active" data-size="single">سينجل</button>
+          <button type="button" class="size-btn" data-size="double">دابل</button>
         </div>
       </div>
 
-      <!-- اختيار الكومبو -->
       <div class="option-group">
         <label class="checkbox-label">
           <input type="checkbox" id="combo"> 
-          <span>أضف كومبو (بطاطس + مشروب) <strong style="color:var(--brand);">+30 ج</strong></span>
+          <span>أضف كومبو (بطاطس + مشروب) <strong style="color:var(--brand);">+50 ج</strong></span>
         </label>
       </div>
 
-      <!-- الإضافات -->
       <div class="option-group">
         <div class="option-title"><i class="fas fa-plus-circle"></i> إضافات مميزة</div>
-        <!-- الجافاسكريبت سيقوم بوضع الـ Checkboxes الخاصة بالإضافات هنا -->
         <div id="addons"></div>
       </div>
       
-      <!-- التحكم في الكمية -->
       <div class="option-group">
         <div class="quantity-control">
           <div class="option-title" style="margin:0; font-size: 15px;">الكمية</div>
@@ -361,7 +135,6 @@
     </div>
   </section>
 
-  <!-- الشريط السفلي الثابت (أضف للسلة) -->
   <div class="product-action-bar">
     <div class="price-wrap">
       <span class="price-label">السعر الإجمالي</span>
@@ -372,7 +145,6 @@
     </button>
   </div>
 
-  <!-- الفوتر -->
   <footer class="footer">
     <div class="container">
       <div class="social-links">
@@ -387,8 +159,33 @@
     </div>
   </footer>
 
-  <!-- الإشعارات العائمة -->
   <div id="toast" style="display: none; position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: var(--brand); color: #000; padding: 12px 25px; border-radius: 25px; font-weight: bold; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.3);"></div>
+  
+  <!-- السلة الأساسية المخفية -->
+  <div id="sticky-cart" style="display: none !important;">
+    <span id="cart-count">0 عناصر</span>
+    <span id="cart-total">0 ج</span>
+  </div>
+
+  <!-- الكود الذكي لتحديث رقم السلة -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const updateStickyCartVisuals = () => {
+        const cartCount = document.getElementById('cart-count');
+        const badge = document.getElementById('bottom-badge');
+        if(cartCount && badge) {
+          const number = cartCount.innerText.replace(/[^0-9]/g, '');
+          badge.innerText = number || '0';
+          badge.style.display = (number && number !== '0') ? 'flex' : 'none';
+        }
+      };
+      
+      const target = document.getElementById('cart-count');
+      if (target) {
+        new MutationObserver(updateStickyCartVisuals).observe(target, { childList: true, characterData: true, subtree: true });
+      }
+    });
+  </script>
 
   <script src="app.js"></script>
 </body>

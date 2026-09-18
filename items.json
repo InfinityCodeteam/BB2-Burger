@@ -1,306 +1,281 @@
 [
-    {
-    "id": 25,
-    "category": "d",
-    "name": "كومبو ناشفل تشيكن ",
-    "desc": "(( خس - خيار مخلل - قطعة تشيكن ناشفل - كريمي صوص -  - ٢ موتزريلا استكس - قطعة تركي - شيدر صوص )) + كرينكل فرايز + بيج كولا + ٢ قطعة دره حلو",
-    "price": {
-      "single": 180,
-      "double": 220
-    },
-    "image": "https://i.postimg.cc/x13mPTtd/Whats-App-Image-2025-09-14-at-01-53-12-b7553c7c.jpg",
-    "featured": true
-  },
   {
     "id": 1,
     "category": "a",
-    "name": "أوريجينال برجر",
-    "desc": "قطعة لحمة صافي 150جم - خس - خيار مخلل - شيدر صوص - صوص من اختيارك -(بيج تاستي - سويت شيلي - باربيكو - ثاوسند ايلاند - رانش - سموكد بي بي تو)",
+    "name": "أوريجنال بيف",
+    "desc": "خس - خيار مخلل - بصل فريش - قطعة لحم 150 جم - صوص تكساس - صوص شيدر أمريكي",
     "price": {
-      "single": 115,
-      "double": 155
+      "single": 145,
+      "double": 195
     },
-    "image": "https://i.postimg.cc/hGz6dkKn/IMG-20250826-WA0037.jpg",
-    "featured": true
+    "image": "https://via.placeholder.com/150",
+    "featured": false
   },
   {
     "id": 2,
     "category": "a",
-    "name": "موتزريلا برجر",
-    "desc": "قطعة لحمة صافي 150جم - خس - خيار مخلل - صوص - موتزريلا (بيج تاستي - سويت شيلي - باربيكو - ثاوسند ايلاند - رانش - سموكد بي بي تو)",
+    "name": "سموكد روما",
+    "desc": "خس - خيار مخلل - بصل فريش - قطعة لحم 150 جم محشية شيدر - صوص سويت تشيلي - صوص شيدر أمريكي - 4 قطع بيبروني - 2 موتزاريلا ستيكس",
     "price": {
-      "single": 125,
-      "double": 165
+      "single": 200,
+      "double": 250
     },
-    "image": "https://i.postimg.cc/m23bcF8j/IMG-20250826-WA0024.jpg",
+    "image": "https://via.placeholder.com/150",
     "featured": false
   },
   {
     "id": 3,
     "category": "a",
-    "name": "سبايسي برجر",
-    "desc": "قطعة لحمة صافي 150جم - خس - خيار مخلل - صوص - مايونيز اسبايسي - هالبينو",
+    "name": "بيكون فولكانو",
+    "desc": "خس - خيار مخلل - بصل فريش - قطعة لحم 150 جم محشية بيكون مشوي - 2 موتزاريلا ستيكس - ثاوزند آيلاند - صوص شيدر أمريكي",
     "price": {
-      "single": 115,
-      "double": 155
+      "single": 195,
+      "double": 245
     },
-    "image": "https://i.postimg.cc/5NmV9W2k/IMG-20250826-WA0031.jpg",
+    "image": "https://via.placeholder.com/150",
     "featured": false
   },
   {
     "id": 4,
     "category": "a",
-    "name": "تركي برجر",
-    "desc": "قطعة لحمة صافي 150جم محشيه موتزريلا - خس - خيار مخلل - شيدر صوص - روز صوص - 2 أصابع موتزريلا استكس - شريحة تركي مدخن مشويه",
+    "name": "سموكد فاير",
+    "desc": "خس - خيار مخلل - بصل فريش - قطعة لحم 150 جم - سبايسي مايونيز - 2 أصابع شيدر هالبينو - قطع هالبينو - صوص شيدر أمريكي",
     "price": {
-      "single": 175,
-      "double": 215
+      "single": 185,
+      "double": 235
     },
-    "image": "https://i.postimg.cc/mZJ4py68/IMG-20250826-WA0005.jpg",
+    "image": "https://via.placeholder.com/150",
     "featured": false
   },
   {
     "id": 5,
     "category": "a",
-    "name": "بيكون برجر",
-    "desc": "قطعة لحمة صافي 150جم محشيه موتزريلا - خس - خيار مخلل - شيدر صوص - بيج تاستي صوص - 2 أصابع موتزريلا استكس - شريحة بيكون مدخن مشويه",
+    "name": "بي بي تو برجر",
+    "desc": "خس - خيار مخلل - بصل فريش - قطعة لحم 150 جم محشية موتزاريلا - قطعة تركي - 2 موتزاريلا ستيكس - BB2 Sauce - صوص شيدر أمريكي",
     "price": {
-      "single": 175,
-      "double": 215
+      "single": 205,
+      "double": 255
     },
-    "image": "https://i.postimg.cc/ry5qcKsC/IMG-20250827-WA0018.jpg",
-    "featured": false
+    "image": "https://via.placeholder.com/150",
+    "featured": true
   },
   {
     "id": 6,
     "category": "a",
-    "name": "أقوي ميكس ((برجر ع الفحم & فرايد تشيكن))",
-    "desc": "قطعة برجر ع الفحم 150جم - قطعة فراخ فرايد تشيكن - خس - خيار مخلل - 2 موتزريلا استكس - صوص شيدر - ميكس شيلي صوص - قطعة روز بيف مشوية ع الفحم",
+    "name": "تشيزي مونستر",
+    "desc": "خس - خيار مخلل - بصل فريش - قطعة لحم 150 جم محشية إيمنتال سويسري وشيدر أمريكي وموتزاريلا - مشروم فريش - كريمي رانش",
     "price": {
-      "single": 220
+      "single": 185,
+      "double": 235
     },
-    "image": "https://i.postimg.cc/05d3Dd1z/IMG-20250826-WA0044.jpg",
-    "featured": true
+    "image": "https://via.placeholder.com/150",
+    "featured": false
   },
   {
     "id": 7,
-    "category": "c",
-    "name": "ميكس تشيز برجر",
-    "desc": "قطعة لحمة صافي 150جم محشيه موتزريلا وامريكان تشيز - خيار مخلل - خس - شيدر صوص -تكساس صوص- أصابع موتزريلا استكس - قطعة روز بيف",
+    "category": "b",
+    "name": "فولت سماش",
+    "desc": "خس - خيار مخلل - بصل جريل - قطعة لحم 100 جم - شرائح إيمنتال - تكساس - صوص شيدر أمريكي",
     "price": {
-      "single": 185,
-      "double": 225
+      "single": 160,
+      "double": 200
     },
-    "image": "https://i.postimg.cc/4xxGzP5B/IMG-20250827-WA0020.jpg",
-    "featured": true
+    "image": "https://via.placeholder.com/150",
+    "featured": false
   },
   {
     "id": 8,
-    "category": "c",
-    "name": "كرمليز مشروم برجر",
-    "desc": "قطعة لحمة صافي 150جم محشيه موتزريلا - خس - خيار مخلل - شيدر صوص -ميكس صوص- مشروم - 4قطع ببروني - أصابع موتزريلا استكس - بصل مكرمل - مشروم مشوي ع الفحم",
-    "price": {
-      "single": 185,
-      "double": 225
-    },
-    "image": "https://i.postimg.cc/WbTBHYwm/IMG-20250826-WA0034.jpg",
-    "featured": true
-  },  {
-    "id": 9,
-    "category": "c",
-    "name": "دوريتوس برجر",
-    "desc": "قطعة لحمة صافي 150جم محشيه موتزريلا - خيار مخلل - خس - شيدر صوص - تاستي صوص -2 أصابع موتزريلا استكس - ميكس قطع دوريتوس وبيكون وامريكان تشيز",
-    "price": {
-      "single": 185,
-      "double": 225
-    },
-    "image": "https://i.postimg.cc/HxPmgwWW/IMG-20250826-WA0003.jpg",
-    "featured": true
-  },
-  {
-    "id": 10,
-    "category": "c",
-    "name": "بي بي تو برجر",
-    "desc": "قطعة لحمة صافي 150جم محشيه موتزريلا و بيكون - خس - خيار مخلل - شيدر صوص - بي بي تو صوص - 2أصابع موتزريلا استكس ",
+    "category": "b",
+    "name": "سويت شاركول",
+    "desc": "خس - خيار مخلل - بصل جريل - قطعة لحم 100 جم - سويت أونيون آند مشروم - كريمي BB2 - صوص شيدر أمريكي",
     "price": {
       "single": 175,
       "double": 215
     },
-    "image": "https://i.postimg.cc/PJ4RHhQW/IMG-20250826-WA0042.jpg",
-    "featured": true
+    "image": "https://via.placeholder.com/150",
+    "featured": false
   },
-   {
-    "id": 11,
+  {
+    "id": 9,
     "category": "b",
-    "name": "بيج سماش",
-    "desc": "قطعة لحمة صافي 100جم - خس - خيار مخلل - صوص شيدر - صوص بيج تاستي",
+    "name": "سماش كينج",
+    "desc": "خس - خيار مخلل - بصل جريل - قطعة لحم 100 جم - روز صوص - قطعة روز بيف - 2 موتزاريلا ستيكس - صوص شيدر أمريكي",
     "price": {
-      "single": 115,
-      "double": 145
+      "single": 200,
+      "double": 240
     },
-    "image": "https://i.postimg.cc/52mwZG0G/IMG-20250827-WA0014.jpg",
+    "image": "https://via.placeholder.com/150",
+    "featured": false
+  },
+  {
+    "id": 10,
+    "category": "d",
+    "name": "أوريجنال تشيكن",
+    "desc": "خس - خيار مخلل - قطعة تشيكن 120 جم - تكساس - صوص شيدر أمريكي",
+    "price": {
+      "single": 135,
+      "double": 175
+    },
+    "image": "https://via.placeholder.com/150",
+    "featured": false
+  },
+  {
+    "id": 11,
+    "category": "d",
+    "name": "تشيكن ناشفال",
+    "desc": "خس - خيار مخلل - قطعة تشيكن 120 جم - ناشفال - سبايسي مايونيز - صوص شيدر أمريكي - 2 موتزاريلا ستيكس - شريحة تركي",
+    "price": {
+      "single": 185,
+      "double": 225
+    },
+    "image": "https://via.placeholder.com/150",
     "featured": true
   },
   {
     "id": 12,
-    "category": "b",
-    "name": "دينااميت سماش",
-    "desc": "قطعة لحمة صافي 100جم - خس - خيار مخلل - بصل مكرمل - صوص شيدر - هالبينو - سبايسي مايونيز",
+    "category": "d",
+    "name": "رانش بوم",
+    "desc": "خس - خيار مخلل - قطعة تشيكن 120 جم - كريمي رانش - كريمي فيلادلفيا - صوص شيدر أمريكي - شريحة إيمنتال - مشروم مشوي",
     "price": {
-      "single": 130,
-      "double": 160
+      "single": 170,
+      "double": 210
     },
-    "image": "https://i.postimg.cc/RFwYPw3b/IMG-20250826-WA0041.jpg",
-    "featured": true
+    "image": "https://via.placeholder.com/150",
+    "featured": false
   },
   {
     "id": 13,
-    "category": "b",
-    "name": "سبشيال سماش",
-    "desc": "قطعة لحمة صافي 100جم - خس - خيار مخلل - صوص شيدر - صوص تكساس - 2 أصابع موتزريلا استكس",
+    "category": "d",
+    "name": "تشيلي تشيكن",
+    "desc": "خس - خيار مخلل - قطعة تشيكن 120 جم - صوص شيدر أمريكي - صوص سويت تشيلي - قطعة بيكون مشوي",
     "price": {
-      "single": 135,
-      "double": 165
+      "single": 180,
+      "double": 220
     },
-    "image": "https://i.postimg.cc/bNnh7S78/IMG-20250826-WA0002.jpg",
+    "image": "https://via.placeholder.com/150",
     "featured": false
   },
   {
     "id": 14,
     "category": "d",
-    "name": "أوريجنال تشيكن",
-    "desc": "فرايد تشيكن - خس - خيار مخلل - صوص شيدر - صوص من اختيارك (بيج تاستي - سويت شيلي - باربيكو - ثاوسند ايلاند - رانش - سموكد بي بي تو)",
+    "name": "روز تشيكن",
+    "desc": "خس - خيار مخلل - قطعة تشيكن 120 جم - قطعة روز بيف - 2 موتزاريلا ستيكس - روز صوص - صوص شيدر أمريكي",
     "price": {
-      "single": 100,
-      "double": 140
+      "single": 180,
+      "double": 220
     },
-    "image": "https://i.postimg.cc/3J7YwYDM/IMG-20250827-WA0021.jpg",
+    "image": "https://via.placeholder.com/150",
     "featured": false
   },
   {
     "id": 15,
     "category": "d",
-    "name": "سبايسي تشيكن",
-    "desc": "خس - خيار مخلل - قطعة فرايد تشيكن - صوص شيدر - سبايسي مايونيز - هالبينو",
+    "name": "تشيكن باربكيو",
+    "desc": "خس - خيار مخلل - قطعة تشيكن 120 جم - 4 قطع بيبروني - 2 موتزاريلا ستيكس - صوص باربيكيو - صوص شيدر",
     "price": {
-      "single": 100,
-      "double": 140
+      "single": 185,
+      "double": 225
     },
-    "image": "https://i.postimg.cc/kXc96zx2/IMG-20250827-WA0019.jpg",
+    "image": "https://via.placeholder.com/150",
     "featured": false
   },
   {
     "id": 16,
-    "category": "d",
-    "name": "شيلي تشيكن",
-    "desc": "قطعة فرايد تشيكن - خس - خيار مخلل - صوص شيدر - صوص شيلي - 2 أصابع موتزريلا - قطعة بيكون مشوي علي الفحم",
+    "category": "e",
+    "name": "كلاسيك فرايز",
+    "desc": "بطاطس مقلية",
     "price": {
-      "single": 155,
-      "double": 195
+      "single": 60
     },
-    "image": "https://i.postimg.cc/tg80vXB7/IMG-20250826-WA0033.jpg",
+    "image": "https://via.placeholder.com/150",
     "featured": false
   },
   {
     "id": 17,
-    "category": "d",
-    "name": "رانش تشيكن",
-    "desc": "قطعة فرايد تشيكن - خس - خيار مخلل - 4 قطع ببروني مشوي - صوص شيدر - 2 أصابع موتزريلا استكس - صوص رانش",
+    "category": "e",
+    "name": "تشيز فرايز",
+    "desc": "بطاطس + صوص جبنة",
     "price": {
-      "single": 155,
-      "double": 195
+      "single": 80
     },
-    "image": "https://i.postimg.cc/26j9Cy20/Whats-App-Image-2025-08-27-at-01-21-33-a13a0fa5.jpg",
+    "image": "https://via.placeholder.com/150",
     "featured": false
   },
   {
     "id": 18,
-    "category": "d",
-    "name": "تركي تشيكن",
-    "desc": "فرايد تشيكن - خس - خيار مخلل - صوص شيدر - صوص تاستي - 2 أصابع موتزريلا استكس - قطعة تركي مدخن مشوي ع الفحم",
+    "category": "e",
+    "name": "لودد فرايز",
+    "desc": "بطاطس مع سماش برجر + بصل فريش مفروم + صوص جبنة + توابل",
     "price": {
-      "single": 155,
-      "double": 195
+      "single": 120
     },
-    "image": "https://i.postimg.cc/mg6KhLfV/IMG-20250826-WA0038.jpg",
+    "image": "https://via.placeholder.com/150",
     "featured": false
   },
   {
     "id": 19,
-    "category": "d",
-    "name": "روز تشيكن",
-    "desc": "فرايد تشيكن - خس - خيار مخلل - صوص شيدر - روز صوص - 2 أصابع موتزريلا استكس - روز بيف مشوي ع الفحم",
+    "category": "e",
+    "name": "ستربس حار",
+    "desc": "قطعتان استربس حار",
     "price": {
-      "single": 155,
-      "double": 195
+      "single": 80
     },
-    "image": "https://i.postimg.cc/26PHhGCK/Whats-App-Image-2025-08-27-at-01-26-13-e52075d5.jpg",
+    "image": "https://via.placeholder.com/150",
     "featured": false
   },
-    {
+  {
     "id": 20,
     "category": "e",
-    "name": "2 قطعه استربس حار",
-    "desc": "",
+    "name": "هوت ستار فرايز",
+    "desc": "بطاطس، هالبينو، قطع استربس، صوص جبنة، توابل",
     "price": {
-      "single": 65
+      "single": 100
     },
-    "image": "https://i.postimg.cc/LX12JsTS/IMG-20250827-WA0016.jpg",
+    "image": "https://via.placeholder.com/150",
     "featured": false
   },
   {
     "id": 21,
-    "category": "e",
-    "name": "بطاطس",
-    "desc": "",
+    "category": "f",
+    "name": "كيدز ميل بيف",
+    "desc": "بيف + بطاطس + عصير + لعبة",
     "price": {
-      "single": 55
+      "single": 110
     },
-    "image": "https://i.postimg.cc/6qnpnBCs/Whats-App-Image-2025-08-28-at-17-13-26-94119853.jpg",
+    "image": "https://via.placeholder.com/150",
     "featured": false
   },
   {
     "id": 22,
-    "category": "e",
-    "name": "بطاطس جبنه",
-    "desc": "",
+    "category": "f",
+    "name": "كيدز ميل تشيكن",
+    "desc": "تشيكن + بطاطس + عصير + لعبة",
     "price": {
-      "single": 70
+      "single": 100
     },
-    "image": "https://i.postimg.cc/QxXJNhTm/IMG-20250826-WA0064-1.jpg",
+    "image": "https://via.placeholder.com/150",
     "featured": false
   },
   {
     "id": 23,
-    "category": "e",
-    "name": "بطاطس جبنه هالبينو",
+    "category": "g",
+    "name": "مياه صغيرة",
     "desc": "",
     "price": {
-      "single": 80
+      "single": 10
     },
-    "image": "https://i.postimg.cc/PqVJk3d7/Whats-App-Image-2025-08-28-at-17-11-24-68b1107c.jpg",
+    "image": "https://via.placeholder.com/150",
     "featured": false
   },
   {
     "id": 24,
-    "category": "e",
-    "name": "بطاطس جبنه استربس",
+    "category": "g",
+    "name": "كولا",
     "desc": "",
     "price": {
-      "single": 95
+      "single": 25
     },
-    "image": "https://i.postimg.cc/d1z0hhkm/Whats-App-Image-2025-08-28-at-17-12-44-fa7a1fbb.jpg",
-    "featured": false
-  },
-  {
-    "id": 26,
-    "category": "e",
-    "name": "بطاطس سماش شيدر",
-    "desc": "",
-    "price": {
-      "single": 105
-    },
-    "image": "https://i.postimg.cc/Pxfkhth1/Whats-App-Image-2025-12-29-at-7-50-05-PM.jpg",
+    "image": "https://via.placeholder.com/150",
     "featured": false
   }
 ]
