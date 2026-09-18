@@ -63,6 +63,20 @@
     .fav-btn.favorited { color: var(--danger); background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); }
     .fav-btn:active { transform: scale(1.1); }
 
+    /* 🌟 تنسيقات قسم الموقع والخريطة */
+    .location-section { margin-top: 40px; margin-bottom: 20px; }
+    .map-card { background: var(--bg-card); border-radius: var(--radius-md); overflow: hidden; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 5px 20px rgba(0,0,0,0.3); }
+    .map-wrapper { width: 100%; height: 220px; background: #2a2a2a; }
+    .map-wrapper iframe { width: 100%; height: 100%; border: none; filter: contrast(1.1) opacity(0.9); }
+    .address-info { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: rgba(0,0,0,0.2); flex-wrap: wrap; gap: 12px; }
+    .address-text { display: flex; align-items: center; gap: 12px; flex: 1; }
+    .address-text i { font-size: 22px; color: var(--brand); animation: bounce 2s infinite; }
+    .address-text p { font-size: 13px; font-weight: 700; color: #fff; margin: 0; line-height: 1.5; }
+    .address-text span { display: block; font-size: 11px; color: var(--text-muted); font-weight: 600; }
+    .btn-directions { background: rgba(255, 208, 0, 0.1); color: var(--brand); border: 1px solid var(--brand); padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 800; text-decoration: none; display: flex; align-items: center; gap: 6px; transition: 0.3s; white-space: nowrap; }
+    .btn-directions:hover, .btn-directions:active { background: var(--brand); color: #111; transform: translateY(-2px); }
+    @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+
     .reviews-section { margin-top: 40px; margin-bottom: 40px; }
     .review-card { background: var(--bg-card); border-radius: var(--radius-sm); padding: 8px; border: 1px solid rgba(255,255,255,0.05); }
     .review-img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; }
@@ -114,7 +128,7 @@
       <div class="hero-content">
         <h1>الجودة هي <span>طعمنا المفضل</span></h1>
         <p>اكتشف أقوى طعم برجر باللحم البلدي الصافي 100%</p>
-        <a href="BB2 Burger Portfclio_compressed.pdf" class="btn-brand">
+        <a href="menupdf.pdf" class="btn-brand">
           <i class="fas fa-file-pdf"></i> عرض المنيو
         </a>
       </div>
@@ -128,6 +142,33 @@
     </div>
     
     <div id="featured-grid" class="grid"></div>
+  </section>
+
+ <!-- 🌟 قسم الموقع والخريطة - فرع قليوب -->
+  <section class="container location-section">
+    <div class="section-title">
+      <span><i class="fas fa-map-marker-alt" style="color:var(--brand); margin-left:5px;"></i> موقعنا</span>
+    </div>
+    
+    <div class="map-card">
+      <div class="map-wrapper">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3449.133962187782!2d31.2146050848818!3d30.17616703183458!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14586b5c29decc71%3A0x3fdc69ac6c488b81!2sBB2%20Burger!5e0!3m2!1sar!2seg!4v1789759761240!5m2!1sar!2seg" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+      </div>
+      
+      <div class="address-info">
+        <div class="address-text">
+          <i class="fas fa-map-marker-alt"></i>
+          <div>
+            <p>فرع قليوب</p>
+            <span>الساحة - عمارات الاستثماري - عمارة رقم 2 أمام مدرسة التجارة</span>
+          </div>
+        </div>
+        
+        <a href="https://maps.app.goo.gl/jqXguLrZyhLfsEMA8?g_st=ac" target="_blank" class="btn-directions">
+          <i class="fas fa-location-arrow"></i> الاتجاهات
+        </a>
+      </div>
+    </div>
   </section>
 
   <section class="container reviews-section">
@@ -223,15 +264,14 @@
   <script src="app.js"></script>
   
   <script>
-    // 🌟 تفعيل السكرول التلقائي للتقييمات
     const swiper = new Swiper('.reviews-slider', {
       slidesPerView: 1.2, 
       spaceBetween: 15,
       centeredSlides: true,
       loop: true,
       autoplay: {
-        delay: 2500, // يتحرك كل 2.5 ثانية
-        disableOnInteraction: false, // يكمل حركة حتى لو العميل لمسه
+        delay: 2500,
+        disableOnInteraction: false, 
       },
       pagination: {
         el: '.swiper-pagination',
